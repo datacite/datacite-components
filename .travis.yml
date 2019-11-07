@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- 12.8.1
+env:
+- WEBPACK_VERSION=4 MOCHA_VERSION=4
+- WEBPACK_VERSION=4 MOCHA_VERSION=5
+cache: npm
+install:
+- npm install -g @vue/cli
+- npm install -g @vue/cli-service-global
+before_script:
+- npm install webpack@$WEBPACK_VERSION
+- npm install mocha@$MOCHA_VERSION
+- yarn add @vue/cli-plugin-unit-mocha
+script:
+- yarn test:unit tests
+before_deploy: vue build --target wc-async --name datacite-components 'src/components/*.vue'
+deploy:
+  provider: npm
+  email: kj.garza@gmail.com
+  skip_cleanup: true
+  api_key:
+    secure: Z6xeXwnZsWu4bR3woa+Fh0ELRaDJb+7l9BtdXTdevusk2A4A+djt43UwRzJCPlGzTE6IXSk0jbjoXYEDLwwgF73Hv72f9sZhxFIAe9nqUrATpkaELr+/K3zm6BnJxj114q7m1C+5cYxagj96/JtavjGq8L0NVyx5/WWjkN/uWTbQNcLiPHiO+liN6AqygAU62GSz0NPSTLxYtQrPvq4wicSTTTbxrMGxQR9QwwDQjrNeigT4kevtJqKn3uYncEEIYOsZZ0e6kk/vLTu8BHNm+TPchkFPJPIjUQ32B9yEBHqZ54RCZLY8pGfUtCHbHLos/NyeUi8nrt2h3qGrrwmqzMCk1Dj1ZAUyAnYPLefpGoQTrvF+/a/GSTVwvZHyq9/AmQvuX1XYdOBSTe36dYSguBPegIfaq7ZGY69WdZaNzmFGdxGbtGeqM8jOwVun2e4vFGRnYgIGwJjX3U10vXYDA6QI7jjEK2VcilMznQDsIpAu3w/DOY43bjkU476XorURMcd0UVH+5o7WgO4nQhhGiHzkJxlp/T8+JfDWAZEBMxi6zs7/sJSpsPEsq910hzM6DtMoDHwpIDj5CLN04ZwNRiVoR3QrkhV22nzFUv/AgM1jdfm5NCViHzamLdvWUnqHWc/ZTXebbrXntcV2q56GPPumAdYq3d50cLaH+Od9LEA=
+  on:
+    repo: kjgarza/datacite-components
+    branch: master

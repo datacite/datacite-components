@@ -1,6 +1,24 @@
 <template>
   <div class="hello">
+    <div>
+  <!-- <b-tabs content-class="mt-3">
+    <b-tab title="First" active><p>I'm the first tab</p></b-tab>
+    <b-tab title="Second"><p>I'm the second tab</p></b-tab>
+    <b-tab title="Disabled" disabled><p>I'm a disabled tab!</p></b-tab>
+  </b-tabs> -->
+
+  <LinksTabsVue doi="10.21978/b36g-xg54" />
+
+
+</div>
     <h1>{{ msg }}</h1>
+
+
+              <LinksTabsVue doi="10.5194/acp-15-13023-2015" />
+<BadgeBuilder/>
+              <!-- <DataciteFooter/> -->
+
+
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
@@ -27,12 +45,29 @@
       <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>
+    <div>
+  <h2>Example heading <b-badge>New</b-badge></h2>
+  <h3>Example heading <b-badge>New</b-badge></h3>
+  <h4>Example heading <b-badge>New</b-badge></h4>
+  <h5>Example heading <b-badge>New</b-badge></h5>
+  <h6>Example heading <b-badge>New</b-badge></h6>
+</div>
   </div>
 </template>
 
 <script>
+import LinksTabsVue from './LinksTabs.vue';
+// import DataciteFooter from './DataciteFooter.vue';
+import BadgeBuilder from './BadgeBuilder.vue';
+
 export default {
   name: 'HelloWorld',
+  components:{
+    LinksTabsVue,
+    // DataciteFooter,
+    BadgeBuilder,
+    
+    },
   props: {
     msg: String
   }
