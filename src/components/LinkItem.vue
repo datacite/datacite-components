@@ -32,7 +32,7 @@ export default {
     data: function () {
       return {
         citationText: "",
-        metadata: {},
+        metadata: null,
         doiUrl:"",
       }
     },
@@ -41,8 +41,8 @@ export default {
       let msg =  ` `
       let source = ""
 
-      if(this.metadata == {} ){
-        return `According to <strong> ${this.titleCase(source)} </strong> the item  on this page is related to`
+      if(this.metadata == null ){
+        return `According to <strong> Datacite </strong> the item  on this page is related to the following item:`
       }
 
       if(/^datacite/.test(this.doiInfo.source) == true){
@@ -57,9 +57,9 @@ export default {
           break;
         default:
             if(this.doiInfo.instigator == true){
-               msg = `According to  <strong> ${this.titleCase(source)} </strong>  this item <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)} : <br/>`
+               msg = `According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  this item <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)} : <br/>`
             }else{
-               msg = `According to  <strong> ${this.titleCase(source)} </strong>  the following ${this.titleCase(this.metadata.resourceTypeGeneral)}  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the item on this page : <br/>`
+               msg = `According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  the following ${this.titleCase(this.metadata.resourceTypeGeneral)}  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the item on this page : <br/>`
             }
           break;
       }
@@ -95,7 +95,9 @@ export default {
           } )
           .then((response) => {
             this.doiUrl = "https://doi.org/" + this.doiInfo.doi
-            this.metadata = response.data.data["dataset"] || {}
+               // eslint-disable-next-line
+            console.log(response.data.data)
+            this.metadata = response.data.data == null ? null : response.data.data["dataset"]
             this.citationText  = this.formatPseudoCitation
           })
           .catch(error => {
@@ -116,7 +118,7 @@ export default {
 </script>
 
 <style scoped>
-/* 
+
   
 a.item {
   background-color: transparent;
@@ -264,7 +266,7 @@ a.item:active {
   font-weight: 600;
   src: local('Raleway SemiBold'), local('Raleway-SemiBold'), url(https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwPIsWqZPANqczVs.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-} */
-@import url('https://assets.datacite.org/stylesheets/datacite.css');
+}
+/* @import url('https://assets.datacite.org/stylesheets/datacite.css'); */
 
 </style>

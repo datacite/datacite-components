@@ -189,8 +189,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-/* 
+<style >
+
 
 * {
   -webkit-box-sizing: border-box;
@@ -325,8 +325,8 @@ ul li {
   background-color: #66615B;
   border-color: #66615B;
   color: #FFFFFF;
-} */
-@import url('https://assets.datacite.org/stylesheets/datacite.css');
+}
+/* @import url('https://assets.datacite.org/stylesheets/datacite.css'); */
 
 </style>
 

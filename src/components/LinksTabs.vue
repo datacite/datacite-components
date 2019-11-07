@@ -26,11 +26,15 @@
 <script>
 
 import LinksList from '@/components/LinksList.vue'
- 
+
+import { BTab, BTabs } from 'bootstrap-vue'
+
 export default {
   name: 'LinksTabs',
   components:{
     LinksList,
+    'b-tab': BTab,
+    'b-tabs': BTabs
   },
   props: {
     doi: {
@@ -75,19 +79,31 @@ export default {
       this.citationsTotal = "Citations " + value
     }
   },
-  updated: function () {
-    this.$nextTick(function () {
-      this.$children[0].$children[0].isActive = true
-    })
-  },
   watch: {
   }
 }
 </script>
 
-<style scoped>
-/* @import url('https://assets.datacite.org/stylesheets/datacite.css'); */
+<style >
+@import url('https://assets.datacite.org/stylesheets/datacite.css');
+@import url('//unpkg.com/bootstrap/dist/css/bootstrap.min.css');
+@import url('//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css');
 
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.tab-content{
+  background-color:#ffff;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+}
 </style>
 
 
