@@ -13,6 +13,7 @@ before_script:
 - npm install mocha@$MOCHA_VERSION
 - yarn add @vue/cli-plugin-unit-mocha
 script:
+- echo "Success!"
 # - yarn test:unit tests
 before_deploy: vue build --target wc-async --name datacite-components 'src/components/*.vue'
 deploy:
