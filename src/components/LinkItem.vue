@@ -54,8 +54,6 @@ export default {
       }else{
         source = this.doiInfo.source
       }
-
-
          
       switch(source) {
         case("crossref"):
@@ -66,9 +64,9 @@ export default {
         default:
           container = this.metadata.publisher
             if(this.doiInfo.instigator == true){
-               msg = `${this.rowNum}. According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  this item <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)} : <br/>`
+               msg = `${this.rowNum}. According  to <strong> ${this.titleCase(source)} </strong>  via <strong> Datacite </strong> this item <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)} : <br/>`
             }else{
-               msg = `${this.rowNum}. According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  the following ${this.titleCase(this.metadata.resourceTypeGeneral)}  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the item on this page : <br/>`
+               msg = `${this.rowNum}. According  to <strong> ${this.titleCase(source)} </strong>  via <strong> Datacite </strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)}  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the item on this page : <br/>`
             }
           break;
       }
@@ -77,6 +75,7 @@ export default {
     },
     methods: {
       titleCase: function(string){
+        string = string == "text" ? "Publication" : string
         return(string.replace(/\b\S/g, t => t.toUpperCase().replace(/-/g, " ")))
       },
       meka: function(){
