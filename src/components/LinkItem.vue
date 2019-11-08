@@ -28,6 +28,9 @@ export default {
       doiInfo: {
         type: Object
       },
+      rowNum:{
+        type: Number
+      }
     },
     data: function () {
       return {
@@ -42,7 +45,7 @@ export default {
       let source = ""
 
       if(this.metadata == null ){
-        return `According to <strong> Datacite </strong> the item  on this page is related to the following item:`
+        return `${this.rowNum}. According to <strong> Datacite </strong> the item  on this page is related to the following item:`
       }
 
       if(/^datacite/.test(this.doiInfo.source) == true){
@@ -53,13 +56,13 @@ export default {
        
       switch(source) {
         case("crossref"):
-           msg =  `According to <strong> ${this.titleCase(source)} </strong> the item  on this page is in the  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> of `
+           msg =  `${this.rowNum}. According to <strong> ${this.titleCase(source)} </strong> the item  on this page is in the  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> of `
           break;
         default:
             if(this.doiInfo.instigator == true){
-               msg = `According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  this item <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)} : <br/>`
+               msg = `${this.rowNum}. According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  this item <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)} : <br/>`
             }else{
-               msg = `According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  the following ${this.titleCase(this.metadata.resourceTypeGeneral)}  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the item on this page : <br/>`
+               msg = `${this.rowNum}. According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  the following ${this.titleCase(this.metadata.resourceTypeGeneral)}  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the item on this page : <br/>`
             }
           break;
       }

@@ -4,11 +4,10 @@
   <!-- <div class=content>
     <div class=row>
       <div class=content-work> -->
-        <div v-for="item in items" v-bind:key="item.doi+Math.random()">
-
-          <LinkItem v-bind:doiInfo="item"/>
+        <div v-for="(item, index) in items" v-bind:key="item.doi+Math.random()">
+          <LinkItem v-bind:doiInfo="item" v-bind:rowNum="index+1+((page-1)*PAGESIZE)" />
         </div>
-        <div class=text-center>
+        <div v-if="totalPages > 1" class=text-center>
           <paginate :page-count="totalPages" :click-handler="get" :prev-text="'Previous'" :next-text="'Next'" :prev-class="'prev'"
             :next-class="'next'" :hide-prev-next="true"	 :disabled-class="'disabled'" :container-class="'pagination pagination'">
           </paginate>
@@ -28,10 +27,12 @@ import Kitsu from 'kitsu'
 import Paginate from 'vuejs-paginate'
 import LinkItem from '@/components/LinkItem.vue'
 
-const citationTypes = ["is-referenced-by","is-cited-by","is-supplement-to"]
-const referenceTypes = ["references","cites","is-supplemented-by"]
+const PAGESIZE = 25
 
-const relationTypes = [
+const CITATIONSTYPES = ["is-referenced-by","is-cited-by","is-supplement-to"]
+const REFERENCETYPES = ["references","cites","is-supplemented-by"]
+
+const RELATIONTYPES = [
     "compiles", "is-compiled-by",
     "documents", "is-documented-by",
     "has-metadata", "is-metadata-for",
@@ -89,6 +90,7 @@ export default {
     return{
       totalPages: 0,
       items: [],
+      PAGESIZE: PAGESIZE,
     }
   },
   computed: {
@@ -98,11 +100,11 @@ export default {
     query(){
       switch(this.type) {
         case "citations":
-          return `(subj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(citationTypes)})) OR (obj_id:"${this.doiUrl}"  AND (relation_type_id:${this.linksQuery(referenceTypes)}))`
+          return `(subj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(CITATIONSTYPES)})) OR (obj_id:"${this.doiUrl}"  AND (relation_type_id:${this.linksQuery(REFERENCETYPES)}))`
         case "references":
-          return `(subj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(referenceTypes)})) OR (obj_id:"${this.doiUrl}"  AND (relation_type_id:${this.linksQuery(citationTypes)}))`
+          return `(subj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(REFERENCETYPES)})) OR (obj_id:"${this.doiUrl}"  AND (relation_type_id:${this.linksQuery(CITATIONSTYPES)}))`
         case "relations":
-          return `(subj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(relationTypes)})) OR (obj_id:"${this.doiUrl}"  AND (relation_type_id:${this.linksQuery(relationTypes)}))`
+          return `(subj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(RELATIONTYPES)})) OR (obj_id:"${this.doiUrl}"  AND (relation_type_id:${this.linksQuery(RELATIONTYPES)}))`
       }
       return ""
     },
@@ -136,7 +138,7 @@ export default {
     get: function(pageNum) {
       try {
         api.get('', {
-          page: { limit: 25, number: pageNum },
+          page: { limit: PAGESIZE, number: pageNum },
           query: this.query
 
         })
@@ -144,7 +146,7 @@ export default {
           // eslint-disable-next-line
           console.log(meta['total'])
           // console.log(data)
-          
+          this.page = pageNum
           this.totalPages = meta['totalPages']
           switch(this.type) {
             case "citations":
