@@ -15,7 +15,7 @@ before_script:
 script:
 - echo "Success!"
 # - yarn test:unit tests
-before_deploy: vue build --target wc-async --name datacite-components "src/components/*.vue"
+before_deploy: yarn build --target wc-async --name datacite-components 'src/components/*.vue'
 deploy:
   provider: npm
   email: kj.garza@gmail.com

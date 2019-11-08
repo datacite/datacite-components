@@ -43,9 +43,10 @@ export default {
      formatPseudoCitation(){
       let msg =  ` `
       let source = ""
+      let container = ""
 
       if(this.metadata == null ){
-        return `${this.rowNum}. According to <strong> Datacite </strong> the item  on this page is related to the following item:`
+        return `${this.rowNum}. According to <strong> Datacite </strong> the item on this page has a relation of the type <strong> "${this.titleCase(this.doiInfo.relation)}" </strong> to the following item: [Metadata not found]`
       }
 
       if(/^datacite/.test(this.doiInfo.source) == true){
@@ -53,12 +54,17 @@ export default {
       }else{
         source = this.doiInfo.source
       }
-       
+
+
+         
       switch(source) {
         case("crossref"):
+
+           container = ""
            msg =  `${this.rowNum}. According to <strong> ${this.titleCase(source)} </strong> the item  on this page is in the  <strong> ${this.titleCase(this.doiInfo.relation)} </strong> of `
           break;
         default:
+          container = this.metadata.publisher
             if(this.doiInfo.instigator == true){
                msg = `${this.rowNum}. According to  <strong> Datacite </strong>  and <strong> ${this.titleCase(source)} </strong>  this item <strong> ${this.titleCase(this.doiInfo.relation)} </strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)} : <br/>`
             }else{
@@ -66,7 +72,7 @@ export default {
             }
           break;
       }
-      return msg + `<i> ${this.metadata.creators[0]["name"]}  ${this.metadata.titles[0]["title"]} ${this.metadata.publicationYear}. ${this.metadata.publisher} </i>`
+      return msg + `<i> ${this.metadata.creators[0]["name"]}  ${this.metadata.titles[0]["title"]} ${this.metadata.publicationYear}. ${container} </i>`
       }
     },
     methods: {
