@@ -9,19 +9,18 @@ install:
 - npm install -g @vue/cli
 - npm install -g @vue/cli-service-global
 before_script:
-- "npm install webpack@$WEBPACK_VERSION"
-- "npm install mocha@$MOCHA_VERSION"
+- npm install webpack@$WEBPACK_VERSION
+- npm install mocha@$MOCHA_VERSION
 - yarn add @vue/cli-plugin-unit-mocha
 script:
 - echo "Success!"
-# - yarn test:unit tests
-before_deploy: yarn build --target wc --name datacite-components 'src/components/*.vue'
+before_deploy: yarn build --target wc-async --name datacite-components 'src/components/*.vue'
 deploy:
   provider: npm
   email: kj.garza@gmail.com
   skip_cleanup: true
   api_key:
-    secure: $GITHUB_TOKEN
+    secure: uivr+a471utM6ptPqk9QQtqj074UMfokNwOUFxvSCiz0cPRPuzqkjFwyB9GBqhDjSaPyVKFZeOn0BZArtpjn1KKwfnI1hu5WFbyoH4sIGW+NKs4Bo8k5tGPHVM2FHMm4vj7pyC+Mc/zlu9y9trtGPF63kRbNxlX4EZ0NEIb83nwqpXFeVZgIs/LHvfd/x7ZRikX+fW+2arzLF4VWq5E6AZmmkr7T1RW+t8EzNjS2NrpjMCvDgEd+ybsFeT7wbvLrFhUADBmgMPEA5vBqoGcIuEw+ascKtnTjc7N+2rsUQUxZkUXqvIAX+3kBEetMrHmcbhL8z8qM8+Sb9rUTu/ns1NFS1IfeEosZ0WL9GGMMYfgzsMLvOWqoyGmMrNMLGQY4eCHSmBO5UvrnhQlDi+dz07ncqxrGJitL6GZdjYVtEhyFBLfV6GqIxze4QgEet3T8WQaLWz/w4uXt45Ub/wq+W19D9iI2tsCpfnTnBuJ0nfh1Nxb3z/Xn7Snhat8xBFJ32spFRBc0WCq9PUb5w6wNwj+isMabQDCiUGccmt6FUpHvMCnABA94EVRiT9FggLhvZb5+N2y/jir3CWqTnfE7TcdPrs8zgofOTRG3zUt5TxX3xHV445p1VsujDdOjvDO0qf/QnrgbvW4rrjBOVrD4kkPOZ5fOU7jLAkQdxmEEPU4=
   on:
     repo: kjgarza/datacite-components
     branch: master
