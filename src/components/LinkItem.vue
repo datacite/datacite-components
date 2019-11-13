@@ -70,7 +70,7 @@ export default {
             }
           break;
       }
-      return msg + `<i> ${this.metadata.creators[0]["name"]}  ${this.metadata.titles[0]["title"]} ${this.metadata.publicationYear}. ${container} </i>`
+      return msg + `<i> ${this.authorFormat(this.metadata.creators)}  ${this.metadata.titles[0]["title"]} ${this.metadata.publicationYear}. ${container} </i>`
       }
     },
     methods: {
@@ -78,7 +78,21 @@ export default {
         string = string == "text" ? "Publication" : string
         return(string.replace(/\b\S/g, t => t.toUpperCase().replace(/-/g, " ")))
       },
-      meka: function(){
+      authorFormat: function(creators){
+        let authors = creators.map( author => 
+          ` ${author["name"]}`
+        );
+        const numAuthors = authors.length;
+        switch (true) {
+        case numAuthors <3:
+          return authors.join(" & ")
+        case numAuthors >3 && numAuthors <25:
+          return authors.slice(0, -1).join(", ") + " & " + authors.slice(-1)
+        default:
+          return authors.slice(0, 24).join(", ") + " … & " + authors.slice(-1)
+        }
+      },
+     getMetadata: function(){
         axios({
             url: APIURL + "/graphql",
             method: 'post',
@@ -91,7 +105,7 @@ export default {
                     titles(first:1) {
                       title
                     }
-                    creators(first:2){
+                    creators(first:25){
                       name
                     }
                     resourceTypeGeneral
@@ -118,7 +132,7 @@ export default {
     },
     watch: {
       getMetadata: {
-        handler: 'meka',
+        handler: 'getMetadata',
         immediate: true
       }
     }
@@ -129,6 +143,7 @@ export default {
 
   
 a.item {
+  color: #68B3C8;
   background-color: transparent;
 }
 
