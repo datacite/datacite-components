@@ -163,7 +163,7 @@ p {
 }
 
 a.item {
-  color: #337ab7;
+  color: #68B3C8;
   text-decoration: none;
 }
 
