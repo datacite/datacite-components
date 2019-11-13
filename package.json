@@ -8,6 +8,9 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "files": [
+    "dist"
+  ],
   "main": "dist/datacite-components.min.js",
   "dependencies": {
     "axios": "^0.19.0",
