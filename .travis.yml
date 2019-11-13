@@ -14,7 +14,7 @@ before_script:
 - yarn add @vue/cli-plugin-unit-mocha
 script:
 - echo "Success!"
-before_deploy: yarn build --target wc-async --name datacite-components 'src/components/*.vue'
+before_deploy: yarn build --target wc --name datacite-components 'src/components/*.vue'
 deploy:
   provider: npm
   email: kj.garza@gmail.com
