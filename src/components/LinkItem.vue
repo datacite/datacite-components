@@ -80,6 +80,7 @@ export default {
       },
       authorFormat: function(creators){
         let authors = creators.map( author => 
+          ///// ` ${author["givenName"]} ${author["familyName"] }` // Given Name doesn't work it seems that is either not indexed of the graphql query is not there yet
           ` ${author["name"]}`
         );
         const numAuthors = authors.length;
