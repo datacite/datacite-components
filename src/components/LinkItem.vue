@@ -56,13 +56,21 @@
           container = ""
           msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> `
           break;
+        case("crossref.citations"):
+          container = ""
+          if (this.doiInfo.instigator == true) {
+            msg = `${this.rowNum}. According to <strong>Crossref</strong> this item <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
+          } else {
+            msg = `${this.rowNum}. According to <strong>Crossref</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+          }
+          break;
         default:
           container = this.metadata.publisher
-            if (this.doiInfo.instigator == true) {
-              msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> this item <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
-            } else {
-              msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
-            }
+          if (this.doiInfo.instigator == true) {
+            msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> this item <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
+          } else {
+            msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+          }
           break;
       }
       return msg + `<i>${this.authorFormat(this.metadata.creators)} ${this.metadata.titles[0]["title"]} ${this.metadata.publicationYear}. ${container}</i>`
