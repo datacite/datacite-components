@@ -1,8 +1,8 @@
 {
   "name": "datacite-components",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "private": false,
-  "author": "Kristian Garza <kj.garza@gmail.com> (https://github.com/kjgarza)",
+  "author": "Kristian Garza <kgarza@datacite.org>",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -14,7 +14,7 @@
   "main": "dist/datacite-components.min.js",
   "dependencies": {
     "axios": "^0.19.0",
-    "bootstrap-vue": "^2.0.4",
+    "bootstrap-vue": "^2.1.0",
     "core-js": "^3.3.2",
     "data-metrics-badge": "^0.2.1",
     "kitsu": "^7.1.0",
@@ -61,10 +61,10 @@
     "> 1%",
     "last 2 versions"
   ],
-  "homepage": "https://github.com/kjgarza/datacite-components/#README.md",
+  "homepage": "https://github.com/datacite/datacite-components/#README.md",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kjgarza/datacite-components.git"
+    "url": "git+https://github.com/datacite/datacite-components.git"
   }
 }
