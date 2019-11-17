@@ -1,19 +1,16 @@
 language: node_js
 node_js:
-- 12.8.1
-env:
-- WEBPACK_VERSION=4 MOCHA_VERSION=4
-- WEBPACK_VERSION=4 MOCHA_VERSION=5
+- 10.1.17
+
 cache: npm
+
 install:
 - npm install -g @vue/cli
 - npm install -g @vue/cli-service-global
-before_script:
-- npm install webpack@$WEBPACK_VERSION
-- npm install mocha@$MOCHA_VERSION
-- yarn add @vue/cli-plugin-unit-mocha
+
 script:
 - echo "Success!"
+
 before_deploy: yarn build --target wc --name datacite-components 'src/components/*.vue'
 
 deploy:
