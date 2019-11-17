@@ -67,9 +67,9 @@
         default:
           container = this.metadata.publisher
           if (this.doiInfo.instigator == true) {
-            msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> this item <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
+            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> this item <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
-            msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
           }
           break;
       }
