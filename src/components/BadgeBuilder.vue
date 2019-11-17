@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     emptyMessage(){
-      return `<div class="panel-body alert alert-secondary">
+      return `<div class="panel-body alert alert-simple-info">
               We found no linking data for this dataset. For information on how to provide linking data information, please see
               <a href="https://support.datacite.org/docs/contributing-data-citations">
               our documentation.
