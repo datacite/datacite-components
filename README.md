@@ -1,5 +1,7 @@
 # datacite-components
 
+[![Build Status](https://travis-ci.com/datacite/datacite-components.svg?branch=master)](https://travis-ci.com/datacite/datacite-components)
+
 ## Project setup
 ```
 yarn install

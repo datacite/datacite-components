@@ -15,6 +15,7 @@ before_script:
 script:
 - echo "Success!"
 before_deploy: yarn build --target wc --name datacite-components 'src/components/*.vue'
+
 deploy:
   provider: npm
   email: kj.garza@gmail.com
