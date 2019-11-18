@@ -42,7 +42,7 @@
         let container = ""
 
         if (this.metadata == null ) {
-          return `${this.rowNum}. According to <strong>Datacite</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> the following item: [Metadata not found]`
+          return `${this.rowNum}. According to <strong>Datacite</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> the following item: <br/>[Metadata not found]`
         }
 
         if (/^datacite/.test(this.doiInfo.source) == true) {
@@ -59,7 +59,7 @@
         case("crossref.citations"):
           container = ""
           if (this.doiInfo.instigator == true) {
-            msg = `${this.rowNum}. According to <strong>Crossref</strong> this item <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
+            msg = `${this.rowNum}. According to <strong>Crossref</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
             msg = `${this.rowNum}. According to <strong>Crossref</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
           }
@@ -67,7 +67,7 @@
         default:
           container = this.metadata.publisher
           if (this.doiInfo.instigator == true) {
-            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> this item <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
+            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
             msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
           }
