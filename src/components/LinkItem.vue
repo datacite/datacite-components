@@ -107,7 +107,7 @@
         data: {
           query: `
             {
-              dataset(id: "${this.doiInfo.doi}") {
+              creativeWork(id: "${this.doiInfo.doi}") {
                 id
                 publisher
                 client {
