@@ -55,7 +55,7 @@
       emptyMessage(){
         return `
           <div class="panel-body alert alert-simple-info">
-            We found no citations, references or relations for this dataset. For information on how to provide this information, please see
+            We found no citations, references or relations for this item. For information on how to provide this information, please see
             <a href="https://support.datacite.org/docs/contributing-data-citations">our documentation</a>.
           </div>`
       },
