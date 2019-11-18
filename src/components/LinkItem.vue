@@ -39,7 +39,6 @@
       formatPseudoCitation() {
         let msg =  ` `
         let source = ""
-        let container = ""
 
         if (this.metadata == null ) {
           return `${this.rowNum}. According to <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the following item: <br/>[Metadata not found]`
@@ -53,11 +52,9 @@
          
       switch(source) {
         case("crossref"):
-          container = ""
-          msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> `
+          msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           break;
         case("crossref.citations"):
-          container = ""
           if (this.doiInfo.instigator == true) {
             msg = `${this.rowNum}. According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
@@ -65,7 +62,6 @@
           }
           break;
         default:
-          container = this.metadata.publisher
           if (this.doiInfo.instigator == true) {
             msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
@@ -73,7 +69,7 @@
           }
           break;
       }
-      return msg + `<i>${this.authorFormat(this.metadata.creators)} ${this.metadata.titles[0]["title"]} ${this.metadata.publicationYear}. ${container}</i>`
+      return msg + `${this.metadata.formattedCitation}`
       }
     },
     methods: {
@@ -85,21 +81,6 @@
         string = (string == "text") ? "publication" : string
         return(string.replace(/\b\S/g, t => t.replace(/-/g, " ")))
       },
-      authorFormat: function(creators){
-        let authors = creators.map( author => 
-          `${author["name"]}`
-        );
-        const numAuthors = authors.length;
-        
-        switch(true) {
-          case numAuthors <3:
-            return authors.join(" & ")
-          case numAuthors >3 && numAuthors <25:
-            return authors.slice(0, -1).join(", ") + " & " + authors.slice(-1)
-          default:
-            return authors.slice(0, 24).join(", ") + " … & " + authors.slice(-1)
-        }
-      },
     getMetadata: function() {
       axios({
         url: APIURL + "/graphql",
@@ -109,20 +90,12 @@
             {
               creativeWork(id: "${this.doiInfo.doi}") {
                 id
-                publisher
                 client {
-                  name
-                }
-                titles(first:1) {
-                  title
-                }
-                creators(first:25){
-                  givenName
-                  familyName
                   name
                 }
                 resourceTypeGeneral
                 publicationYear
+                formattedCitation
               }
             }
             `

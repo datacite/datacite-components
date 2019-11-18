@@ -9280,9 +9280,9 @@ vega-transforms@^1.2:
     vega-util "1"
 
 vega-typings@*:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.11.0.tgz#664edc86962639bb68e67a0339281f06ce8a3b33"
-  integrity sha512-i67WNmzm1ymswDT8t54dOQusDUO+95Lzxmum0YkNrBIXso1hwFWUT1les0swNlKzSJPjhTofN2OrPXa6C+uf6w==
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/vega-typings/-/vega-typings-0.11.1.tgz#0a6d3476250147f8d6ed43cf436d9d6daa643ab9"
+  integrity sha512-yymFEW0fg/pjeuAsdMYLiwMW/Z0or45JJGUDiO+VSTF0dLE1qfQgWlpwm4gv2B/5Dx4FJEmj0OSTctOfjmFGCA==
   dependencies:
     vega-util "^1.11.0"
 
