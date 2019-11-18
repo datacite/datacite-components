@@ -42,7 +42,7 @@
         let container = ""
 
         if (this.metadata == null ) {
-          return `${this.rowNum}. According to <strong>Datacite</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> the following item: <br/>[Metadata not found]`
+          return `${this.rowNum}. According to <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the following item: <br/>[Metadata not found]`
         }
 
         if (/^datacite/.test(this.doiInfo.source) == true) {
@@ -54,22 +54,22 @@
       switch(source) {
         case("crossref"):
           container = ""
-          msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> `
+          msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> `
           break;
         case("crossref.citations"):
           container = ""
           if (this.doiInfo.instigator == true) {
-            msg = `${this.rowNum}. According to <strong>Crossref</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
+            msg = `${this.rowNum}. According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
-            msg = `${this.rowNum}. According to <strong>Crossref</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+            msg = `${this.rowNum}. According to <strong>Crossref</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
           }
           break;
         default:
           container = this.metadata.publisher
           if (this.doiInfo.instigator == true) {
-            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.titleCase(this.doiInfo.relation)}</strong> the ${this.titleCase(this.metadata.resourceTypeGeneral)}: <br/>`
+            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
-            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> the following ${this.titleCase(this.metadata.resourceTypeGeneral)} <strong>${this.titleCase(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+            msg = `${this.rowNum}. According to <strong>${source}</strong> via <strong>Datacite</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
           }
           break;
       }
@@ -78,8 +78,12 @@
     },
     methods: {
       titleCase: function(string) {
-        string = (string == "text") ? "Publication" : string
+        string = (string == "text") ? "publication" : string
         return(string.replace(/\b\S/g, t => t.toUpperCase().replace(/-/g, " ")))
+      },
+      humanize: function(string) {
+        string = (string == "text") ? "publication" : string
+        return(string.replace(/\b\S/g, t => t.replace(/-/g, " ")))
       },
       authorFormat: function(creators){
         let authors = creators.map( author => 
