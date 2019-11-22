@@ -1,16 +1,10 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="panel panel-default">
-        <div class="panel-body" >
-          <p v-html="citationText"></p>
-          <a class="item" v-bind:href="doiUrl" target="_blank" title="Go to landing page">
-            {{doiUrl}}
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <li>
+    <p v-html="citationText"></p>
+    <a class="item" v-bind:href="doiUrl" target="_blank" title="Go to landing page">
+      {{doiUrl}}
+    </a>
+  </li>
 </template>
 
 <script>
@@ -23,9 +17,6 @@
     props: {
       doiInfo: {
         type: Object
-      },
-      rowNum:{
-        type: Number
       }
     },
     data: function() {
@@ -41,7 +32,7 @@
         let source = ""
 
         if (this.metadata == null ) {
-          return `${this.rowNum}. According to <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the following item: <br/>[Metadata not found]`
+          return `According to <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the following item: <br/>[Metadata not found]`
         }
 
         if (/^datacite/.test(this.doiInfo.source) == true) {
@@ -52,20 +43,20 @@
          
       switch(source) {
         case("crossref"):
-          msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
+          msg = `According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           break;
         case("crossref.citations"):
           if (this.doiInfo.instigator == true) {
-            msg = `${this.rowNum}. According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
+            msg = `According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
-            msg = `${this.rowNum}. According to <strong>Crossref</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+            msg = `According to <strong>Crossref</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
           }
           break;
         default:
           if (this.doiInfo.instigator == true) {
-            msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
+            msg = `According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
           } else {
-            msg = `${this.rowNum}. According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+            msg = `According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
           }
           break;
       }
@@ -103,7 +94,7 @@
       })
       .then((response) => {
           this.doiUrl = "https://doi.org/" + this.doiInfo.doi
-          this.metadata = response.data.data == null ? null : response.data.data["dataset"]
+          this.metadata = response.data.data == null ? null : response.data.data["creativeWork"]
           this.citationText  = this.formatPseudoCitation
         })
         .catch(error => {
