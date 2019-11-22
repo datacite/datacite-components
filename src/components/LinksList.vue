@@ -2,9 +2,9 @@
 <template>
   <div style="{position: relative;}">
     <div class="content">
-      <div v-for="(item, index) in items" v-bind:key="item.doi + Math.random()">
-        <LinkItem v-bind:doiInfo="item" v-bind:rowNum="index+1 + ((page-1) * PAGESIZE)" />
-      </div>
+      <ol v-for="(item, index) in items" v-bind:key="item.doi + Math.random()" v-bind:start="index+1 + ((page-1) * PAGESIZE)">
+        <LinkItem v-bind:doiInfo="item" />
+      </ol>
       <div v-if="totalPages > 1" class=text-center>
         <paginate :page-count="totalPages" :click-handler="get" :prev-text="'Previous'" :next-text="'Next'" :prev-class="'prev'"
           :next-class="'next'" :hide-prev-next="true"	 :disabled-class="'disabled'" :container-class="'pagination pagination'">
