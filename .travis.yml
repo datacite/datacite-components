@@ -9,8 +9,12 @@ install:
 - npm install -g @vue/cli
 - npm install -g @vue/cli-service-global
 
+before_script:
+- npm install webpack
+- npm install mocha
+- yarn add @vue/cli-plugin-unit-mocha
 script:
-- echo "Success!"
+- yarn test:unit tests
 
 before_deploy: yarn build --target wc --name datacite-components 'src/components/*.vue'
 
