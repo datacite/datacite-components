@@ -1,9 +1,8 @@
 language: node_js
 node_js:
-  - "10"
+  - 12.8.1
 
-cache:
-  yarn: true
+cache: npm
 
 install:
 - npm install -g @vue/cli
