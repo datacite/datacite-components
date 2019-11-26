@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <LinksTabs doi="10.5438/ct8b-x1ce"/>
+    <LinksTabs doi="10.5438/0010"/>
   </div>
 </template>
 

@@ -1,9 +1,6 @@
 <template>
   <li>
     <p v-html="citationText"></p>
-    <a class="item" v-bind:href="doiUrl" target="_blank" title="Go to landing page">
-      {{doiUrl}}
-    </a>
   </li>
 </template>
 
