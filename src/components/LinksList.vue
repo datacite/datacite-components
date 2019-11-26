@@ -39,8 +39,8 @@
       "describes", "is-described-by"
     ]
 
+  import axios from 'axios';
   import { APIURL } from '@/models/constants.js'
-
 
   const api = new Kitsu(
     {
@@ -81,6 +81,7 @@
         totalPages: 0,
         items: [],
         PAGESIZE: PAGESIZE,
+        clientName: "ffdfdsdsfsdf"
       }
     },
     computed: {
@@ -97,7 +98,7 @@
             return `(subj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(RELATIONTYPES)})) OR (obj_id:"${this.doiUrl}" AND (relation_type_id:${this.linksQuery(RELATIONTYPES)}))`
         }
         return ""
-      },
+      }
     },
     methods:{
       linksQuery(types){
@@ -109,7 +110,10 @@
       grabDois: function(data){
         let dois = data.map(element => {
           if(this.isSelf(element["subjId"])){
-            return {doi: this.doiFromUrl(element["objId"]), instigator: true, source: element["sourceId"], relation: element["relationTypeId"]}
+                // eslint-disable-next-line
+          console.log(this.clientName)
+          // this.getClientName()
+            return {doi: this.doiFromUrl(element["objId"]), instigator: true, source: this.clientName, relation: element["relationTypeId"]}
           }else{
             return {doi: this.doiFromUrl(element["subjId"]), instigator: false, source: element["sourceId"], relation: element["relationTypeId"]}
           }
@@ -124,6 +128,35 @@
       },
       doiFromUrl: function(doi){
         return doi.replace(/https:\/\/doi\.org\//gi, '')
+      },
+      getClientName: function() {
+        axios({
+          url: APIURL + "/graphql",
+          method: 'post',
+          data: {
+            query: `
+              {
+                creativeWork(id: "${this.doi}") {
+                  client {
+                    name
+                  }
+                }
+              }
+              `
+          }
+        })
+        .then((response) => {
+          // eslint-disable-next-line
+            // console.log(response.data.data)
+            this.clientName = response.data.data == null ? "DataCite Search" : response.data.data["creativeWork"].client.name    
+            this.get(1)      
+          })
+          .catch(error => {
+            // eslint-disable-next-line
+            console.log(error)
+            this.errored = true
+          })
+          .finally(() => this.loading = false)
       },
       get: function(pageNum) {
         try {
@@ -160,7 +193,7 @@
       },
       get_all: function() {
         try {
-          this.get(1)
+          this.getClientName()
         } catch (e) {
           // eslint-disable-next-line
           console.log(e)

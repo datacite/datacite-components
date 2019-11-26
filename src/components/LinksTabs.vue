@@ -40,6 +40,11 @@
           return value.match(/^10\.\d{4,5}\/[-._;()/:a-zA-Z0-9*~$=]+/)
         }
       },
+      client: {
+        type: String,
+        default: "DataCite Search",
+        required: true
+      }
     },
     data: function() {
       return {
