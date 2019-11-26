@@ -56,7 +56,7 @@ describe('LinkItem.vue', () => {
       wrapper.vm.$nextTick(() => {
       
         expect(wrapper.html()).to.contain('10.5438/0010')
-        expect(wrapper.html()).to.contain('According to <strong>Crossref</strong> the item on this page <strong>references</strong> the Dataset: <br>DataCite Metadata Working Group. (2014). DataCite Metadata Schema for the Publication and Citation of Research Data v3.1.')
+        expect(wrapper.html()).to.contain('According to <strong>Crossref</strong> the following Dataset <strong>references</strong> the item on this page: <br>DataCite Metadata Working Group. (2014). DataCite Metadata Schema for the Publication and Citation of Research Data v3.1.')
         done()
       })
     })
