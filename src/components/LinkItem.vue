@@ -43,7 +43,11 @@
          
       switch(source) {
         case("crossref"):
-          msg = `According to <strong>${this.titleCase(source)}</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
+          if (this.doiInfo.instigator == false) {
+            msg = `According to <strong>Crossref</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+          } else {
+            msg = `According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
+          }          
           break;
         case("crossref.citations"):
           if (this.doiInfo.instigator == true) {
@@ -72,6 +76,12 @@
         string = (string == "text") ? "publication" : string
         return(string.replace(/\b\S/g, t => t.replace(/-/g, " ")))
       },
+      urlize: function(string)  {
+        if (!/^https?:\/\//i.test(string)) {
+            return('http://doi.org' + string)
+        }
+        return(string)
+      },
     getMetadata: function() {
       axios({
         url: APIURL + "/graphql",
@@ -93,7 +103,7 @@
         }
       })
       .then((response) => {
-          this.doiUrl = "https://doi.org/" + this.doiInfo.doi
+          this.doiUrl = this.urlize(this.doiInfo.doi)
           this.metadata = response.data.data == null ? null : response.data.data["creativeWork"]
           this.citationText  = this.formatPseudoCitation
         })
