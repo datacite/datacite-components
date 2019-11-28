@@ -69,11 +69,11 @@
     },
     methods: {
       titleCase: function(string = "") {
-        string = (string == "text") ? "publication" : string
+        string = (string == "text" || string == null) ? "publication" : string
         return(string.replace(/\b\S/g, t => t.toUpperCase().replace(/-/g, " ")))
       },
       humanize: function(string = "") {
-        string = (string == "text") ? "publication" : string
+        string = (string == "text" || string == null) ? "publication" : string
         return(string.replace(/\b\S/g, t => t.replace(/-/g, " ")))
       },
       urlize: function(string = "")  {
