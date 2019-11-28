@@ -129,7 +129,7 @@
       doiFromUrl: function(doi){
         return doi.replace(/https:\/\/doi\.org\//gi, '')
       },
-      getClientName: function() {
+      startComponent: function() {
         axios({
           url: APIURL + "/graphql",
           method: 'post',
@@ -193,7 +193,7 @@
       },
       get_all: function() {
         try {
-          this.getClientName()
+          this.startComponent()
         } catch (e) {
           // eslint-disable-next-line
           console.log(e)
