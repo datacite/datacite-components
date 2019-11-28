@@ -78,7 +78,7 @@
       },
       urlize: function(string = "")  {
         if (!/^https?:\/\//i.test(string)) {
-            return('http://doi.org' + string)
+            return('http://doi.org/' + string)
         }
         return(string)
       },
