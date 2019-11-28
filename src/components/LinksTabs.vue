@@ -67,7 +67,7 @@
     },
     methods:{
       // correctly pluralize depending on value, and use thousands separator
-      formatNumbers: function(value, label) {
+      formatNumbers: function(value = 0, label) {
         if (value === 1) {
           return value.toLocaleString('en-us') + ' ' + label
         } else {
@@ -75,15 +75,15 @@
         }
         
       },
-      loadreferencesTotal(value){
+      loadreferencesTotal(value = 0){
         this.referencesNum = value
         this.referencesTotal = this.formatNumbers(value, 'Reference')         
       },
-      loadrelationsTotal(value){
+      loadrelationsTotal(value = 0){
         this.relationsNum = value
         this.relationsTotal = this.formatNumbers(value, 'Relation')
       },
-      loadcitationsTotal(value){
+      loadcitationsTotal(value = 0){
         this.citationsNum = value
         this.citationsTotal = this.formatNumbers(value, 'Citation')
       }

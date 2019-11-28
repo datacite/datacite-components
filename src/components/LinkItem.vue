@@ -68,15 +68,15 @@
       }
     },
     methods: {
-      titleCase: function(string) {
+      titleCase: function(string = "") {
         string = (string == "text") ? "publication" : string
         return(string.replace(/\b\S/g, t => t.toUpperCase().replace(/-/g, " ")))
       },
-      humanize: function(string) {
+      humanize: function(string = "") {
         string = (string == "text") ? "publication" : string
         return(string.replace(/\b\S/g, t => t.replace(/-/g, " ")))
       },
-      urlize: function(string)  {
+      urlize: function(string = "")  {
         if (!/^https?:\/\//i.test(string)) {
             return('http://doi.org' + string)
         }
