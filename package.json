@@ -1,6 +1,6 @@
 {
   "name": "datacite-components",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "private": false,
   "author": "Kristian Garza <kgarza@datacite.org>",
   "scripts": {
