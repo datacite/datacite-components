@@ -110,15 +110,29 @@
       grabDois: function(data){
         let dois = data.map(element => {
           if(this.isSelf(element["subjId"])){
-                // eslint-disable-next-line
-          console.log(this.clientName)
-          // this.getClientName()
             return {doi: this.doiFromUrl(element["objId"]), instigator: true, source: this.clientName, relation: element["relationTypeId"]}
           }else{
             return {doi: this.doiFromUrl(element["subjId"]), instigator: false, source: element["sourceId"], relation: element["relationTypeId"]}
           }
         });
-        return dois
+        let unique = this.unique(dois)
+        return(unique)
+      },
+      unique: function(array){
+        const result = [];
+        const map = new Map();
+        for (const item of array) {
+            if(!map.has(item.doi)){
+                map.set(item.doi, true);    // set any value to Map
+                result.push({
+                    doi: item.doi,
+                    instigator: item.instigator,
+                    source: item.source,
+                    relation: item.relation
+                });
+            }
+        }
+        return(result)
       },
       isSelf: function(item){
         if(item == ("https://doi.org/" + this.doi)){
@@ -158,6 +172,39 @@
           })
           .finally(() => this.loading = false)
       },
+      // getMetadata: function() {
+      //   axios({
+      //     url: APIURL + "/graphql",
+      //     method: 'post',
+      //     data: {
+      //       query: `
+      //         {
+      //           creativeWorks(ids: "${this.itemLinks}") {
+      //             work: nodes {
+      //               id
+      //               client {
+      //                 name
+      //               }
+      //               resourceTypeGeneral
+      //               publicationYear
+      //               formattedCitation
+      //             }
+      //           }
+      //         }
+      //         `
+      //     }
+      //   })
+      //   .then((response) => {
+      //       let metadata = response.data.data == null ? null : response.data.data["creativeWorks"]
+      //       this.grabDois(metadata)
+      //     })
+      //     .catch(error => {
+      //       // eslint-disable-next-line
+      //       console.log(error)
+      //       this.errored = true
+      //     })
+      //     .finally(() => this.loading = false)
+      // },
       get: function(pageNum) {
         try {
           api.get('', {
@@ -169,16 +216,17 @@
             this.totalPages = meta['totalPages']
             switch(this.type) {
               case "citations":
-                this.$emit('citationsLoaded', meta['total'])
                 this.items = this.grabDois(data)
+                this.$emit('citationsLoaded', this.items.length)
+                // this.getMetadata()
                 break;
               case "references":
-                this.$emit('referencesLoaded', meta['total'])
                 this.items = this.grabDois(data)
+                this.$emit('referencesLoaded', this.items.length)
                 break;
               case "relations":
-                this.$emit('relationsLoaded', meta['total'])
                 this.items = this.grabDois(data)
+                this.$emit('relationsLoaded', this.items.length)
                 break;
             }
           })
