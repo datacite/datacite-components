@@ -1,19 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <LinksTabs doi="10.15125/bath-00708"/>
+    <img
+      alt="Vue logo"
+      src="./assets/logo.png"
+    >
+    <LinksTabs doi="10.15125/bath-00708" />
   </div>
 </template>
 
 <script>
-import LinksTabs from './components/LinksTabs.vue'
+import LinksTabs from './components/LinksTabs.vue';
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
-    LinksTabs
-  }
-}
+    LinksTabs,
+  },
+};
 </script>
 
 <style>
