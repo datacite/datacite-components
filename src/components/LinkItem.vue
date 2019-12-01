@@ -1,132 +1,130 @@
 <template>
   <li>
-    <p v-html="citationText"></p>
-    <a v-if="metadata == null" class="item" v-bind:href="doiUrl" target="_blank" title="Go to landing page">
-      {{doiUrl}}
+    <p v-html="formatPseudoCitation" />
+    <a
+      v-if="doiInfo.resourceTypeGeneral == null"
+      class="item"
+      :href="urlize(doiInfo.doi)"
+      target="_blank"
+      title="Go to landing page"
+    >
+      {{ urlize(doiInfo.doi) }}
     </a>
   </li>
 </template>
 
 <script>
-  import axios from 'axios';
-  import { APIURL } from '@/models/constants.js'
-
-  export default {
-    name: 'LinkItem',
-    components: {},
-    props: {
-      doiInfo: {
-        type: Object
-      }
+export default {
+  name: 'LinkItem',
+  components: {},
+  props: {
+    // eslint-disable-next-line vue/require-default-prop
+    doiInfo: {
+      type: Object,
     },
-    data: function() {
-      return {
-        citationText: "",
-        metadata: null,
-        doiUrl: "",
+  },
+  data() {
+    return {
+      citationText: '',
+      metadata: null,
+      doiUrl: '',
+    };
+  },
+  computed: {
+    formatPseudoCitation() {
+      let msg = ' ';
+      let source = '';
+
+      if (this.doiInfo.resourceTypeGeneral == null) {
+        return `According to <strong>Datacite</strong> the item on this page <strong>${this.humanize(
+          this.doiInfo.relation,
+        )}</strong> the following item: <br/>[Metadata not found]`;
       }
-    },
-    computed: {
-      formatPseudoCitation() {
-        let msg =  ` `
-        let source = ""
 
-        if (this.metadata == null ) {
-          return `According to <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the following item: <br/>[Metadata not found]`
-        }
+      if (/^datacite/.test(this.doiInfo.source) === true) {
+        source = this.doiInfo.client.name;
+      } else {
+        source = this.doiInfo.source;
+      }
 
-        if (/^datacite/.test(this.doiInfo.source) == true) {
-          source = this.metadata.client.name
-        } else{
-          source = this.doiInfo.source
-        }
-         
-      switch(source) {
-        case("crossref"):
-          if (this.doiInfo.instigator == false) {
-            msg = `According to <strong>Crossref</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+      switch (source) {
+        case 'crossref':
+          if (this.doiInfo.instigator === false) {
+            msg = `According to <strong>Crossref</strong> the following ${this.humanize(
+              this.doiInfo.resourceTypeGeneral,
+            )} <strong>${this.humanize(
+              this.doiInfo.relation,
+            )}</strong> the item on this page: <br/>`;
           } else {
-            msg = `According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
-          }          
+            msg = `According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(
+              this.doiInfo.relation,
+            )}</strong> the ${this.humanize(
+              this.doiInfo.resourceTypeGeneral,
+            )}: <br/>`;
+          }
           break;
-        case("crossref.citations"):
-          if (this.doiInfo.instigator == true) {
-            msg = `According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
+        case 'crossref.citations':
+          if (this.doiInfo.instigator === true) {
+            msg = `According to <strong>Crossref</strong> the item on this page <strong>${this.humanize(
+              this.doiInfo.relation,
+            )}</strong> the ${this.humanize(
+              this.doiInfo.resourceTypeGeneral,
+            )}: <br/>`;
           } else {
-            msg = `According to <strong>Crossref</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+            msg = `According to <strong>Crossref</strong> the following ${this.humanize(
+              this.doiInfo.resourceTypeGeneral,
+            )} <strong>${this.humanize(
+              this.doiInfo.relation,
+            )}</strong> the item on this page: <br/>`;
           }
           break;
         default:
-          if (this.doiInfo.instigator == true) {
-            msg = `According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.humanize(this.doiInfo.relation)}</strong> the ${this.humanize(this.metadata.resourceTypeGeneral)}: <br/>`
+          if (this.doiInfo.instigator === true) {
+            msg = `According to <strong>${this.titleCase(
+              source,
+            )}</strong> via <strong>Datacite</strong> the item on this page <strong>${this.humanize(
+              this.doiInfo.relation,
+            )}</strong> the ${this.humanize(
+              this.doiInfo.resourceTypeGeneral,
+            )}: <br/>`;
           } else {
-            msg = `According to <strong>${this.titleCase(source)}</strong> via <strong>Datacite</strong> the following ${this.humanize(this.metadata.resourceTypeGeneral)} <strong>${this.humanize(this.doiInfo.relation)}</strong> the item on this page: <br/>`
+            msg = `According to <strong>${this.titleCase(
+              source,
+            )}</strong> via <strong>Datacite</strong> the following ${this.humanize(
+              this.doiInfo.resourceTypeGeneral,
+            )} <strong>${this.humanize(
+              this.doiInfo.relation,
+            )}</strong> the item on this page: <br/>`;
           }
           break;
       }
-      return msg + `${this.metadata.formattedCitation}`
-      }
+      return `${msg}${this.doiInfo.formattedCitation}`;
     },
-    methods: {
-      titleCase: function(string = "") {
-        string = (string == "text" || string == null) ? "publication" : string
-        return(string.replace(/\b\S/g, t => t.toUpperCase().replace(/-/g, " ")))
-      },
-      humanize: function(string = "") {
-        string = (string == "text" || string == null) ? "publication" : string
-        return(string.replace(/\b\S/g, t => t.replace(/-/g, " ")))
-      },
-      urlize: function(string = "")  {
-        if (!/^https?:\/\//i.test(string)) {
-            return('http://doi.org/' + string)
-        }
-        return(string)
-      },
-    getMetadata: function() {
-      axios({
-        url: APIURL + "/graphql",
-        method: 'post',
-        data: {
-          query: `
-            {
-              creativeWork(id: "${this.doiInfo.doi}") {
-                id
-                client {
-                  name
-                }
-                resourceTypeGeneral
-                publicationYear
-                formattedCitation
-              }
-            }
-            `
-        }
-      })
-      .then((response) => {
-          this.doiUrl = this.urlize(this.doiInfo.doi)
-          this.metadata = response.data.data == null ? null : response.data.data["creativeWork"]
-          this.citationText  = this.formatPseudoCitation
-        })
-        .catch(error => {
-          // eslint-disable-next-line
-          console.log(error)
-          this.errored = true
-        })
-        .finally(() => this.loading = false)
-      },
+  },
+  methods: {
+    titleCase(string = '') {
+      // eslint-disable-next-line no-param-reassign
+      string = string === 'text' || string == null ? 'publication' : string;
+      return string.replace(/\b\S/g, (t) => t.toUpperCase().replace(/-/g, ' '));
     },
-    watch: {
-      getMetadata: {
-        handler: 'getMetadata',
-        immediate: true
+    humanize(string = '') {
+      // eslint-disable-next-line no-param-reassign
+      string = string === 'text' || string == null ? 'publication' : string;
+      return string.replace(/\b\S/g, (t) => t.replace(/-/g, ' '));
+    },
+    urlize(string = '') {
+      if (!/^https?:\/\//i.test(string)) {
+        return `http://doi.org/${string}`;
       }
-    }
-  }
+      return string;
+    },
+  },
+};
 </script>
 
-<style scoped> 
+<style scoped>
   a {
-    color: #68B3C8;
+    color: #68b3c8;
     background-color: transparent;
   }
 
@@ -140,11 +138,11 @@
   }
 
   p {
-      display: block;
-      margin-block-start: 0.2em;
-      margin-block-end: 0.2em;
-      margin-inline-start: 0px;
-      margin-inline-end: 0px;
+    display: block;
+    margin-block-start: 0.2em;
+    margin-block-end: 0.2em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
   }
 
   * {
@@ -161,7 +159,7 @@
   }
 
   a.item {
-    color: #68B3C8;
+    color: #68b3c8;
     text-decoration: none;
   }
 
@@ -204,7 +202,7 @@
   }
 
   a.item {
-    color: #68B3C8;
+    color: #68b3c8;
     -webkit-transition: all 150ms linear;
     -moz-transition: all 150ms linear;
     -o-transition: all 150ms linear;
@@ -214,7 +212,7 @@
 
   a.item:hover,
   a.item:focus {
-    color: #3091B2;
+    color: #3091b2;
     text-decoration: none;
   }
 
@@ -238,40 +236,54 @@
 
   .panel {
     border: 0;
-    border-bottom: 0px solid #DDDDDD;
+    border-bottom: 0px solid #dddddd;
     box-shadow: none;
   }
 
   @font-face {
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 400;
-    src: local('Raleway'), local('Raleway-Regular'), url(https://fonts.gstatic.com/s/raleway/v14/1Ptug8zYS_SKggPNyCMIT4ttDfCmxA.woff2) format('woff2');
-    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    src: local("Raleway"), local("Raleway-Regular"),
+      url(https://fonts.gstatic.com/s/raleway/v14/1Ptug8zYS_SKggPNyCMIT4ttDfCmxA.woff2)
+        format("woff2");
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+      U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
 
   @font-face {
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 400;
-    src: local('Raleway'), local('Raleway-Regular'), url(https://fonts.gstatic.com/s/raleway/v14/1Ptug8zYS_SKggPNyC0IT4ttDfA.woff2) format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    src: local("Raleway"), local("Raleway-Regular"),
+      url(https://fonts.gstatic.com/s/raleway/v14/1Ptug8zYS_SKggPNyC0IT4ttDfA.woff2)
+        format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+      U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+      U+2215, U+FEFF, U+FFFD;
   }
 
   @font-face {
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 600;
-    src: local('Raleway SemiBold'), local('Raleway-SemiBold'), url(https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwPIsWqhPANqczVsq4A.woff2) format('woff2');
-    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    src: local("Raleway SemiBold"), local("Raleway-SemiBold"),
+      url(https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwPIsWqhPANqczVsq4A.woff2)
+        format("woff2");
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+      U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
 
   @font-face {
-    font-family: 'Raleway';
+    font-family: "Raleway";
     font-style: normal;
     font-weight: 600;
-    src: local('Raleway SemiBold'), local('Raleway-SemiBold'), url(https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwPIsWqZPANqczVs.woff2) format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    src: local("Raleway SemiBold"), local("Raleway-SemiBold"),
+      url(https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwPIsWqZPANqczVs.woff2)
+        format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+      U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+      U+2215, U+FEFF, U+FFFD;
   }
 
   /* @import url('https://assets.datacite.org/stylesheets/datacite.css'); */
