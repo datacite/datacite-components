@@ -174,7 +174,6 @@ export default {
             instigator: true,
             source: this.clientName,
             relation: element.relationTypeId,
-            metadata: 's',
           };
         }
         return {
@@ -182,7 +181,6 @@ export default {
           instigator: false,
           source: element.sourceId,
           relation: element.relationTypeId,
-          metadata: 's',
         };
       });
       return dois;
@@ -212,6 +210,10 @@ export default {
     },
     doiFromUrl(doi) {
       return doi.replace(/https:\/\/doi\.org\//gi, '');
+    },
+    listDois(array) {
+      const items = array.map((p) => p.doi);
+      return (Array.from(new Set(items)).join(','));
     },
     startComponent() {
       axios({
@@ -255,7 +257,7 @@ export default {
               {
                 creativeWorks(ids: "${list}") {
                   work: nodes {
-                    id
+                    doi: id
                     client {
                       name
                     }
@@ -269,11 +271,16 @@ export default {
         },
       })
         .then((response) => {
-          const metadatas = response.data.data == null
+          let metadatas = response.data.data == null
             ? null
             : response.data.data.creativeWorks.work;
 
           if (metadatas != null) {
+            metadatas = metadatas.map((item) => ({ ...item, doi: this.doiFromUrl(item.doi) }));
+            // eslint-disable-next-line no-nested-ternary
+            metadatas.sort((a, b) => ((a.doi > b.doi) ? 1 : ((b.doi > a.doi) ? -1 : 0)));
+            // eslint-disable-next-line no-nested-ternary
+            data.sort((a, b) => ((a.doi > b.doi) ? 1 : ((b.doi > a.doi) ? -1 : 0)));
             this.items = metadatas.map((item, i) => ({ ...item, ...data[i] }));
           } else {
             this.items = data;
@@ -301,14 +308,15 @@ export default {
 
             let pp;
             let list;
+            let numItems;
             switch (this.type) {
               case 'citations':
                 if (data.length > 0) {
                   pp = this.unique(this.grabDois(data));
-                  list = pp.map((p) => p.doi).join(',');
+                  list = this.listDois(pp);
                   this.getMetadata(list, pp);
                 } else {
-                  this.items = data;
+                  this.items = this.grabDois(data);
                 }
                 // eslint-disable-next-line no-case-declarations
                 const uniqueCitations = typeof meta.uniqueCitations !== 'undefined'
@@ -319,22 +327,26 @@ export default {
               case 'references':
                 if (data.length > 0) {
                   pp = (this.grabDois(data));
-                  list = pp.map((p) => p.doi).join(',');
+                  list = this.listDois(pp);
                   this.getMetadata(list, pp);
+                  numItems = list.split(',').length;
                 } else {
-                  this.items = data;
+                  numItems = 0;
+                  this.items = this.grabDois(data);
                 }
-                this.$emit('referencesLoaded', data.length);
+                this.$emit('referencesLoaded', numItems);
                 break;
               case 'relations':
                 if (data.length > 0) {
                   pp = (this.grabDois(data));
-                  list = pp.map((p) => p.doi).join(',');
+                  list = this.listDois(pp);
                   this.getMetadata(list, pp);
+                  numItems = list.split(',').length;
                 } else {
-                  this.items = data;
+                  numItems = 0;
+                  this.items = this.grabDois(data);
                 }
-                this.$emit('relationsLoaded', data.length);
+                this.$emit('relationsLoaded', numItems);
                 break;
               default:
                 break;

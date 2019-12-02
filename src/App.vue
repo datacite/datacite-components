@@ -4,7 +4,12 @@
       alt="Vue logo"
       src="./assets/logo.png"
     >
-    <LinksTabs doi="10.5061/dryad.5164v" />
+    <LinksTabs doi="10.5438/0012" />
+    <LinksTabs doi="10.5438/ct8b-x1ce" />
+    <LinksTabs doi="10.25490/a97f-egyk" />
+    <LinksTabs doi="10.5438/4sdj-hf49" />
+    <LinksTabs doi="10.15468/3s2nuz" />
+    <LinksTabs doi="10.14454/3bpw-w381" />
   </div>
 </template>
 
