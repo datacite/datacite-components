@@ -35,6 +35,7 @@ import Paginate from 'vuejs-paginate';
 import axios from 'axios';
 import LinkItem from '@/components/LinkItem.vue';
 import { APIURL } from '@/models/constants.js';
+import { utilsMixin } from '@/mixins/utilsMixin.js';
 
 const PAGESIZE = 25;
 const CITATIONSTYPES = [
@@ -84,6 +85,7 @@ export default {
     Paginate,
     LinkItem,
   },
+  mixins: [utilsMixin],
   props: {
     type: {
       type: String,
@@ -163,9 +165,6 @@ export default {
     pageNum(string) {
       return string;
     },
-    doisQuery(dois) {
-      return dois.join(',');
-    },
     grabDois(data) {
       const dois = data.map((element) => {
         if (this.isSelf(element.subjId)) {
@@ -185,35 +184,11 @@ export default {
       });
       return dois;
     },
-    unique(array) {
-      const result = [];
-      const map = new Map();
-      // eslint-disable-next-line no-restricted-syntax
-      for (const item of array) {
-        if (!map.has(item.doi)) {
-          map.set(item.doi, true); // set any value to Map
-          result.push({
-            doi: item.doi,
-            instigator: item.instigator,
-            source: item.source,
-            relation: item.relation,
-          });
-        }
-      }
-      return result;
-    },
     isSelf(item) {
       if (item === `https://doi.org/${this.doi}`) {
         return true;
       }
       return false;
-    },
-    doiFromUrl(doi) {
-      return doi.replace(/https:\/\/doi\.org\//gi, '');
-    },
-    listDois(array) {
-      const items = array.map((p) => p.doi);
-      return (Array.from(new Set(items)).join(','));
     },
     startComponent() {
       axios({
@@ -281,7 +256,13 @@ export default {
             metadatas.sort((a, b) => ((a.doi > b.doi) ? 1 : ((b.doi > a.doi) ? -1 : 0)));
             // eslint-disable-next-line no-nested-ternary
             data.sort((a, b) => ((a.doi > b.doi) ? 1 : ((b.doi > a.doi) ? -1 : 0)));
-            this.items = metadatas.map((item, i) => ({ ...item, ...data[i] }));
+            if (data.length !== metadatas.length) {
+              // eslint-disable-next-line
+              console.log(this.mergeArrayObjects(data, metadatas));
+              this.items = this.mergeArrayObjects(data, metadatas);
+            } else {
+              this.items = metadatas.map((item, i) => ({ ...item, ...data[i] }));
+            }
           } else {
             this.items = data;
           }

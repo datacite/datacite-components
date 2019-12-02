@@ -10,6 +10,7 @@
     <LinksTabs doi="10.5438/4sdj-hf49" />
     <LinksTabs doi="10.15468/3s2nuz" />
     <LinksTabs doi="10.14454/3bpw-w381" />
+    <LinksTabs doi="10.5061/dryad.5164v" />
   </div>
 </template>
 

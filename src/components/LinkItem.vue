@@ -14,9 +14,12 @@
 </template>
 
 <script>
+import { utilsMixin } from '@/mixins/utilsMixin.js';
+
 export default {
   name: 'LinkItem',
   components: {},
+  mixins: [utilsMixin],
   props: {
     // eslint-disable-next-line vue/require-default-prop
     doiInfo: {
@@ -102,22 +105,6 @@ export default {
     },
   },
   methods: {
-    titleCase(string = '') {
-      // eslint-disable-next-line no-param-reassign
-      string = string === 'text' || string == null ? 'publication' : string;
-      return string.replace(/\b\S/g, (t) => t.toUpperCase().replace(/-/g, ' '));
-    },
-    humanize(string = '') {
-      // eslint-disable-next-line no-param-reassign
-      string = string === 'text' || string == null ? 'publication' : string;
-      return string.replace(/\b\S/g, (t) => t.replace(/-/g, ' '));
-    },
-    urlize(string = '') {
-      if (!/^https?:\/\//i.test(string)) {
-        return `http://doi.org/${string}`;
-      }
-      return string;
-    },
   },
 };
 </script>
