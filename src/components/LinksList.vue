@@ -301,15 +301,15 @@ export default {
 
             let pp;
             let list;
-            if (data.length > 0) {
-              pp = this.grabDois(data);
-              list = pp.map((p) => p.doi).join(',');
-              this.getMetadata(list, pp);
-            } else {
-              this.items = data;
-            }
             switch (this.type) {
               case 'citations':
+                if (data.length > 0) {
+                  pp = this.unique(this.grabDois(data));
+                  list = pp.map((p) => p.doi).join(',');
+                  this.getMetadata(list, pp);
+                } else {
+                  this.items = data;
+                }
                 // eslint-disable-next-line no-case-declarations
                 const uniqueCitations = typeof meta.uniqueCitations !== 'undefined'
                   ? meta.uniqueCitations[0].count
@@ -317,9 +317,23 @@ export default {
                 this.$emit('citationsLoaded', uniqueCitations);
                 break;
               case 'references':
+                if (data.length > 0) {
+                  pp = (this.grabDois(data));
+                  list = pp.map((p) => p.doi).join(',');
+                  this.getMetadata(list, pp);
+                } else {
+                  this.items = data;
+                }
                 this.$emit('referencesLoaded', data.length);
                 break;
               case 'relations':
+                if (data.length > 0) {
+                  pp = (this.grabDois(data));
+                  list = pp.map((p) => p.doi).join(',');
+                  this.getMetadata(list, pp);
+                } else {
+                  this.items = data;
+                }
                 this.$emit('relationsLoaded', data.length);
                 break;
               default:
