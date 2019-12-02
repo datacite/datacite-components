@@ -4,7 +4,7 @@
       alt="Vue logo"
       src="./assets/logo.png"
     >
-    <LinksTabs doi="10.15125/bath-00708" />
+    <LinksTabs doi="10.15468/dl.iczdap" />
   </div>
 </template>
 

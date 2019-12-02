@@ -240,7 +240,7 @@ export default {
         })
         .catch((error) => {
           // eslint-disable-next-line
-            console.log(error);
+          console.log(error);
           this.errored = true;
         })
         // eslint-disable-next-line no-return-assign
@@ -299,33 +299,28 @@ export default {
             this.pageNum = pageNum;
             this.totalPages = meta.totalPages;
 
-            console.log('papapa');
             let pp;
             let list;
+            if (data.length > 0) {
+              pp = this.grabDois(data);
+              list = pp.map((p) => p.doi).join(',');
+              this.getMetadata(list, pp);
+            } else {
+              this.items = data;
+            }
             switch (this.type) {
               case 'citations':
-                pp = this.grabDois(data);
-                list = pp.map((p) => p.doi).join(',');
-                this.getMetadata(list, pp);
-
-                this.$emit(
-                  'citationsLoaded',
-                  meta.uniqueCitations[0].count,
-                );
+                // eslint-disable-next-line no-case-declarations
+                const uniqueCitations = typeof meta.uniqueCitations !== 'undefined'
+                  ? meta.uniqueCitations[0].count
+                  : 0;
+                this.$emit('citationsLoaded', uniqueCitations);
                 break;
               case 'references':
-                pp = this.grabDois(data);
-                list = pp.map((p) => p.doi).join(',');
-
-                this.getMetadata(list, pp);
-                this.$emit('referencesLoaded', pp.length);
+                this.$emit('referencesLoaded', data.length);
                 break;
               case 'relations':
-                pp = this.grabDois(data);
-                list = pp.map((p) => p.doi).join(',');
-
-                this.getMetadata(list, pp);
-                this.$emit('relationsLoaded', pp.length);
+                this.$emit('relationsLoaded', data.length);
                 break;
               default:
                 break;
@@ -333,7 +328,7 @@ export default {
           })
           .catch((e) => {
             // eslint-disable-next-line
-              console.log(e.errors);
+              console.log(e);
           });
       } catch (e) {
         // eslint-disable-next-line
