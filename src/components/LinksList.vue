@@ -105,6 +105,11 @@ export default {
       required: true,
       default: 'Datacite Search',
     },
+    // eslint-disable-next-line vue/require-default-prop
+    count: {
+      type: Number,
+      required: false,
+    },
     doi: {
       type: String,
       required: true,
@@ -316,7 +321,12 @@ export default {
     get_all() {
       try {
         this.pageNum = this.page;
-        this.get(1);
+        if (this.type === 'citations' && this.count > 0) {
+          this.get(1);
+        }
+        if (this.type !== 'citations') {
+          this.get(1);
+        }
       } catch (e) {
         // eslint-disable-next-line
           console.log(e);

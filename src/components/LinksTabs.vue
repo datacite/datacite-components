@@ -1,18 +1,17 @@
 <template>
   <div>
     <div v-if="citationsNum + referencesNum + relationsNum > 0">
-      <b-tabs
-        v-if="setClientName != null"
-      >
+      <b-tabs>
         <b-tab
-          v-if="citationsNum > 0"
+          v-if="citationCount > 0"
           id="citations-tab"
           :title="citationsTotal"
         >
           <LinksList
             :doi="doi"
-            :clientName="setClientName"
+            :clientName="client"
             type="citations"
+            :count="citationCount"
             @citationsLoaded="loadcitationsTotal"
           />
         </b-tab>
@@ -23,7 +22,7 @@
         >
           <LinksList
             :doi="doi"
-            :clientName="setClientName"
+            :clientName="client"
             type="references"
             @referencesLoaded="loadreferencesTotal"
           />
@@ -35,7 +34,7 @@
         >
           <LinksList
             :doi="doi"
-            :clientName="setClientName"
+            :clientName="client"
             type="relations"
             @relationsLoaded="loadrelationsTotal"
           />
@@ -73,6 +72,11 @@ export default {
     client: {
       type: String,
       default: 'DataCite Search',
+      required: true,
+    },
+    citationCount: {
+      type: Number,
+      default: 1,
       required: false,
     },
   },
@@ -97,12 +101,6 @@ export default {
     },
     setClientName() {
       return this.clientName;
-    },
-  },
-  watch: {
-    startComponent: {
-      handler: 'startComponent',
-      immediate: true,
     },
   },
   methods: {
