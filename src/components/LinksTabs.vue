@@ -1,7 +1,9 @@
 <template>
   <div>
     <div v-if="citationsNum + referencesNum + relationsNum > 0">
-      <b-tabs>
+      <b-tabs
+        v-if="setClientName != null"
+      >
         <b-tab
           v-if="citationsNum > 0"
           id="citations-tab"
@@ -9,6 +11,7 @@
         >
           <LinksList
             :doi="doi"
+            :clientName="setClientName"
             type="citations"
             @citationsLoaded="loadcitationsTotal"
           />
@@ -20,6 +23,7 @@
         >
           <LinksList
             :doi="doi"
+            :clientName="setClientName"
             type="references"
             @referencesLoaded="loadreferencesTotal"
           />
@@ -31,6 +35,7 @@
         >
           <LinksList
             :doi="doi"
+            :clientName="setClientName"
             type="relations"
             @relationsLoaded="loadrelationsTotal"
           />
@@ -46,6 +51,8 @@
 <script>
 import { BTab, BTabs } from 'bootstrap-vue';
 // eslint-disable-next-line import/no-unresolved
+import axios from 'axios';
+import { APIURL } from '@/models/constants.js';
 import LinksList from '@/components/LinksList.vue';
 
 export default {
@@ -77,6 +84,7 @@ export default {
       citationsTotal: '',
       referencesTotal: '',
       relationsTotal: '',
+      clientName: null,
     };
   },
   computed: {
@@ -87,8 +95,16 @@ export default {
             <a href="https://support.datacite.org/docs/contributing-data-citations">our documentation</a>.
           </div>`;
     },
+    setClientName() {
+      return this.clientName;
+    },
   },
-  watch: {},
+  watch: {
+    startComponent: {
+      handler: 'startComponent',
+      immediate: true,
+    },
+  },
   methods: {
     // correctly pluralize depending on value, and use thousands separator
     formatNumbers(value = 0, label) {
@@ -108,6 +124,37 @@ export default {
     loadcitationsTotal(value = 0) {
       this.citationsNum = value;
       this.citationsTotal = this.formatNumbers(value, 'Citation');
+    },
+    startComponent() {
+      axios({
+        url: `${APIURL}/graphql`,
+        method: 'post',
+        data: {
+          query: `
+              {
+                creativeWork(id: "${this.doi}") {
+                  client {
+                    name
+                  }
+                }
+              }
+              `,
+        },
+      })
+        .then((response) => {
+          // eslint-disable-next-line
+            // console.log(response.data.data)
+          this.clientName = response.data.data == null
+            ? 'DataCite Search'
+            : response.data.data.creativeWork.client.name;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+          this.errored = true;
+        })
+        // eslint-disable-next-line no-return-assign
+        .finally(() => (this.loading = false));
     },
   },
 };

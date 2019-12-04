@@ -100,6 +100,11 @@ export default {
       required: false,
       default: '1',
     },
+    clientName: {
+      type: String,
+      required: true,
+      default: 'Datacite Search',
+    },
     doi: {
       type: String,
       required: true,
@@ -113,7 +118,6 @@ export default {
       totalPages: 0,
       items: [],
       PAGESIZE,
-      clientName: 'DataCite Search',
     };
   },
   computed: {
@@ -189,39 +193,6 @@ export default {
         return true;
       }
       return false;
-    },
-    startComponent() {
-      axios({
-        url: `${APIURL}/graphql`,
-        method: 'post',
-        data: {
-          query: `
-              {
-                creativeWork(id: "${this.doi}") {
-                  client {
-                    name
-                  }
-                }
-              }
-              `,
-        },
-      })
-        .then((response) => {
-          // eslint-disable-next-line
-            // console.log(response.data.data)
-          this.pageNum = this.page;
-          this.clientName = response.data.data == null
-            ? 'DataCite Search'
-            : response.data.data.creativeWork.client.name;
-          this.get(1);
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.log(error);
-          this.errored = true;
-        })
-        // eslint-disable-next-line no-return-assign
-        .finally(() => (this.loading = false));
     },
     getMetadata(list, data) {
       axios({
@@ -344,7 +315,8 @@ export default {
     },
     get_all() {
       try {
-        this.startComponent();
+        this.pageNum = this.page;
+        this.get(1);
       } catch (e) {
         // eslint-disable-next-line
           console.log(e);
