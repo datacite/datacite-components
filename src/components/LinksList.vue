@@ -265,7 +265,6 @@ export default {
 
             let pp;
             let list;
-            let numItems;
             switch (this.type) {
               case 'citations':
                 if (data.length > 0) {
@@ -286,24 +285,20 @@ export default {
                   pp = (this.grabDois(data));
                   list = this.listDois(pp);
                   this.getMetadata(list, pp);
-                  numItems = list.split(',').length;
                 } else {
-                  numItems = 0;
                   this.items = this.grabDois(data);
                 }
-                this.$emit('referencesLoaded', numItems);
+                this.$emit('referencesLoaded', meta.total);
                 break;
               case 'relations':
                 if (data.length > 0) {
                   pp = (this.grabDois(data));
                   list = this.listDois(pp);
                   this.getMetadata(list, pp);
-                  numItems = list.split(',').length;
                 } else {
-                  numItems = 0;
                   this.items = this.grabDois(data);
                 }
-                this.$emit('relationsLoaded', numItems);
+                this.$emit('relationsLoaded', meta.total);
                 break;
               default:
                 break;

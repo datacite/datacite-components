@@ -21,6 +21,8 @@
     <LinksTabs doi="10.5061/dryad.5164v" client="DRYAD" :citationCount=1 />
     <!-- No citations  -->
     <LinksTabs doi="10.5061/dryad.5164v" client="DRYAD" :citationCount=0 />
+    <!-- ma relations  -->
+    <LinksTabs doi="10.5438/0000-00ss" client="DRYAD" :citationCount=20 />
   </div>
 </template>
 
