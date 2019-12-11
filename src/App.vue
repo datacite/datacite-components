@@ -20,9 +20,11 @@
     <!-- Symptom: X-axis label should be horizontal unless there would otherwise be overlap  -->
     <LinksTabs doi="10.5061/dryad.5164v" client="DRYAD" :citationCount=1 />
     <!-- No citations  -->
-    <LinksTabs doi="10.5061/dryad.5164v" client="DRYAD" :citationCount=0 />
+    <LinksTabs doi="10.5061/dryad.5164v" client="DRYAD" :citationCount="0" />
     <!-- ma relations  -->
     <LinksTabs doi="10.5438/0000-00ss" client="DRYAD" :citationCount=20 />
+    <!-- ma relations  -->
+    <LinksTabs doi="10.13127/csi.1.1" client="Istituto Nazionale di Geofisica e Vulcanologia (INGV)" :citationCount=0 />
   </div>
 </template>
 
