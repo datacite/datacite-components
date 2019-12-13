@@ -5,20 +5,20 @@
         <b-tab
           v-if="citationCount > 0"
           id="citations-tab"
-          :title="citationsTotal"
+          :title="citationsTotalLabel"
         >
           <LinksList
             :doi="doi"
             :clientName="client"
             type="citations"
             :count="citationCount"
-            @citationsLoaded="loadcitationsTotal"
+            @citationsLoaded="loadcitationsTotalLabel"
           />
         </b-tab>
         <b-tab
           v-if="referencesNum > 0"
           id="references-tab"
-          :title="referencesTotal"
+          :title="referencesTotalLabel"
         >
           <LinksList
             :doi="doi"
@@ -30,13 +30,13 @@
         <b-tab
           v-if="relationsNum > 0"
           id="relations-tab"
-          :title="relationsTotal"
+          :title="relationsTotalLabel"
         >
           <LinksList
             :doi="doi"
             :clientName="client"
             type="relations"
-            @relationsLoaded="loadrelationsTotal"
+            @relationsLoaded="loadrelationsTotalLabel"
           />
         </b-tab>
       </b-tabs>
@@ -76,7 +76,7 @@ export default {
     },
     citationCount: {
       type: Number,
-      default: 0,
+      default: 1,
       required: false,
     },
   },
@@ -85,9 +85,9 @@ export default {
       citationsNum: 1,
       referencesNum: 1,
       relationsNum: 1,
-      citationsTotal: '',
-      referencesTotal: '',
-      relationsTotal: '',
+      citationsTotalLabel: '',
+      referencesTotalLabel: '',
+      relationsTotalLabel: '',
       clientName: null,
     };
   },
@@ -102,6 +102,10 @@ export default {
     setClientName() {
       return this.clientName;
     },
+    setCitationCount() {
+      // eslint-disable-next-line radix
+      return parseInt(this.citationCount);
+    },
   },
   methods: {
     // correctly pluralize depending on value, and use thousands separator
@@ -113,15 +117,15 @@ export default {
     },
     loadreferencesTotal(value = 0) {
       this.referencesNum = value;
-      this.referencesTotal = this.formatNumbers(value, 'Reference');
+      this.referencesTotalLabel = this.formatNumbers(value, 'Reference');
     },
-    loadrelationsTotal(value = 0) {
+    loadrelationsTotalLabel(value = 0) {
       this.relationsNum = value;
-      this.relationsTotal = this.formatNumbers(value, 'Relation');
+      this.relationsTotalLabel = this.formatNumbers(value, 'Relation');
     },
-    loadcitationsTotal(value = 0) {
+    loadcitationsTotalLabel(value = 0) {
       this.citationsNum = value;
-      this.citationsTotal = this.formatNumbers(value, 'Citation');
+      this.citationsTotalLabel = this.formatNumbers(value, 'Citation');
     },
     startComponent() {
       axios({
