@@ -3,7 +3,7 @@
     <div v-if="citationsNum + referencesNum + relationsNum > 0">
       <b-tabs>
         <b-tab
-          v-if="citationCount > 0"
+          v-if="counts > 0"
           id="citations-tab"
           :title="citationsTotalLabel"
         >
@@ -11,7 +11,7 @@
             :doi="doi"
             :clientName="client"
             type="citations"
-            :count="citationCount"
+            :count="counts"
             @citationsLoaded="loadcitationsTotalLabel"
           />
         </b-tab>
@@ -72,9 +72,9 @@ export default {
     client: {
       type: String,
       default: 'DataCite Search',
-      required: true,
+      required: false,
     },
-    citationCount: {
+    counts: {
       type: Number,
       default: 1,
       required: false,
@@ -102,9 +102,9 @@ export default {
     setClientName() {
       return this.clientName;
     },
-    setCitationCount() {
+    setCitationsCounts() {
       // eslint-disable-next-line radix
-      return parseInt(this.citationCount);
+      return parseInt(this.counts);
     },
   },
   methods: {
