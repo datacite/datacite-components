@@ -276,7 +276,7 @@ export default {
                 }
                 // eslint-disable-next-line no-case-declarations
                 const uniqueCitations = typeof meta.uniqueCitations !== 'undefined'
-                  ? meta.uniqueCitations[0].count
+                  ? meta.uniqueCitations[0].citations
                   : 0;
                 this.$emit('citationsLoaded', uniqueCitations);
                 break;
