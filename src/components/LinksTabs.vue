@@ -7,11 +7,12 @@
           id="citations-tab"
           :title="citationsTotalLabel"
         >
-          <LinksList
+          <LinksListInterface
             :doi="doi"
-            :clientName="client"
+            :client-name="client"
             type="citations"
             :count="counts"
+            :data-input="dataInput"
             @citationsLoaded="loadcitationsTotalLabel"
           />
         </b-tab>
@@ -20,10 +21,11 @@
           id="references-tab"
           :title="referencesTotalLabel"
         >
-          <LinksList
+          <LinksListInterface
             :doi="doi"
-            :clientName="client"
+            :client-name="client"
             type="references"
+            :data-input="dataInput"
             @referencesLoaded="loadreferencesTotal"
           />
         </b-tab>
@@ -32,10 +34,11 @@
           id="relations-tab"
           :title="relationsTotalLabel"
         >
-          <LinksList
+          <LinksListInterface
             :doi="doi"
-            :clientName="client"
+            :client-name="client"
             type="relations"
+            :data-input="dataInput"
             @relationsLoaded="loadrelationsTotalLabel"
           />
         </b-tab>
@@ -52,12 +55,12 @@ import { BTab, BTabs } from 'bootstrap-vue';
 // eslint-disable-next-line import/no-unresolved
 import axios from 'axios';
 import { APIURL } from '@/models/constants.js';
-import LinksList from '@/components/LinksList.vue';
+import LinksListInterface from '@/components/LinksListInterface.vue';
 
 export default {
   name: 'LinksTabs',
   components: {
-    LinksList,
+    LinksListInterface,
     'b-tab': BTab,
     'b-tabs': BTabs,
   },
@@ -77,6 +80,11 @@ export default {
     counts: {
       type: Number,
       default: 1,
+      required: false,
+    },
+    // eslint-disable-next-line vue/require-default-prop
+    dataInput: {
+      type: Object,
       required: false,
     },
   },
@@ -105,6 +113,14 @@ export default {
     setCitationsCounts() {
       // eslint-disable-next-line radix
       return parseInt(this.counts);
+    },
+    dataObject() {
+      if (typeof this.dataInput !== 'undefined') {
+        this.loadreferencesTotal(this.dataInput.references.length);
+        return this.dataInput;
+        // JSON.parse(this.dataInput);
+      }
+      return null;
     },
   },
   methods: {

@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import Kitsu from 'kitsu';
 import Paginate from 'vuejs-paginate';
 import axios from 'axios';
 import LinkItem from '@/components/LinkItem.vue';
@@ -38,49 +37,10 @@ import { APIURL } from '@/models/constants.js';
 import { utilsMixin } from '@/mixins/utilsMixin.js';
 
 const PAGESIZE = 25;
-const CITATIONSTYPES = [
-  'is-referenced-by',
-  'is-cited-by',
-  'is-supplement-to',
-];
-const REFERENCETYPES = ['references', 'cites', 'is-supplemented-by'];
-const RELATIONTYPES = [
-  'compiles',
-  'is-compiled-by',
-  'documents',
-  'is-documented-by',
-  'has-metadata',
-  'is-metadata-for',
-  'is-derived-from',
-  'is-source-of',
-  'reviews',
-  'is-reviewed-by',
-  'requires',
-  'is-required-by',
-  'continues',
-  'is-coutinued-by',
-  'has-version',
-  'is-version-of',
-  'has-part',
-  'is-part-of',
-  'is-variant-from-of',
-  'is-original-form-of',
-  'is-identical-to',
-  'obsoletes',
-  'is-obsolete-by',
-  'is-new-version-of',
-  'is-previous-version-of',
-  'describes',
-  'is-described-by',
-];
 
-const api = new Kitsu({
-  baseURL: `${APIURL}/events`,
-  headers: { accept: 'application/vnd.api+json; version=2' },
-});
 
 export default {
-  name: 'LinksList',
+  name: 'LinksListLocal',
   components: {
     Paginate,
     LinkItem,
@@ -105,17 +65,17 @@ export default {
       required: true,
       default: 'Datacite Search',
     },
-    // eslint-disable-next-line vue/require-default-prop
-    count: {
-      type: Number,
-      required: false,
-    },
     doi: {
       type: String,
       required: true,
       validator(value) {
         return value.match(/^10\.\d{4,5}\/[-._;()/:a-zA-Z0-9*~$=]+/);
       },
+    },
+    // eslint-disable-next-line vue/require-default-prop
+    dataInput: {
+      type: Array,
+      required: false,
     },
   },
   data() {
@@ -128,37 +88,6 @@ export default {
   computed: {
     doiUrl() {
       return `https://doi.org/${this.doi}`;
-    },
-    query() {
-      switch (this.type) {
-        case 'citations':
-          return `(subj_id:"${
-            this.doiUrl
-          }" AND (relation_type_id:${this.linksQuery(
-            CITATIONSTYPES,
-          )})) OR (obj_id:"${
-            this.doiUrl
-          }" AND (relation_type_id:${this.linksQuery(REFERENCETYPES)}))`;
-        case 'references':
-          return `(subj_id:"${
-            this.doiUrl
-          }" AND (relation_type_id:${this.linksQuery(
-            REFERENCETYPES,
-          )})) OR (obj_id:"${
-            this.doiUrl
-          }" AND (relation_type_id:${this.linksQuery(CITATIONSTYPES)}))`;
-        case 'relations':
-          return `(subj_id:"${
-            this.doiUrl
-          }" AND (relation_type_id:${this.linksQuery(
-            RELATIONTYPES,
-          )})) OR (obj_id:"${
-            this.doiUrl
-          }" AND (relation_type_id:${this.linksQuery(RELATIONTYPES)}))`;
-        default:
-          break;
-      }
-      return '';
     },
   },
   watch: {
@@ -176,20 +105,34 @@ export default {
     },
     grabDois(data) {
       const dois = data.map((element) => {
-        if (this.isSelf(element.subjId)) {
-          return {
-            doi: this.doiFromUrl(element.objId),
-            instigator: true,
-            source: this.clientName,
-            relation: element.relationTypeId,
-          };
+        switch (this.type) {
+          case 'citations':
+            return {
+              // doi: element.sourceDoi,
+              // instigator: this.isSelf(element.subjId),
+              // source: this.clientName,
+              // relation: element.relationTypeId,
+              doi: element['target-doi'],
+              instigator: this.isSelf(element['subj-id']),
+              source: this.clientName,
+              relation: element['relation-type-id'],
+            };
+          case 'references':
+            // console.log(element);
+            return {
+              // doi: element.targetDoi,
+              // instigator: this.isSelf(element.subjId),
+              // source: element.sourceId,
+              // relation: element.relationTypeId,
+              doi: element['target-doi'],
+              instigator: this.isSelf(element['subj-id']),
+              source: element['source-id'],
+              relation: element['relation-type-id'],
+            };
+          default:
+            break;
         }
-        return {
-          doi: this.doiFromUrl(element.subjId),
-          instigator: false,
-          source: element.sourceId,
-          relation: element.relationTypeId,
-        };
+        return dois;
       });
       return dois;
     },
@@ -251,76 +194,55 @@ export default {
         // eslint-disable-next-line no-return-assign
         .finally(() => (this.loading = false));
     },
-    get(pageNum) {
-      try {
-        api
-          .get('', {
-            page: { limit: PAGESIZE, number: pageNum },
-            query: this.query,
-            doi: this.doi,
-          })
-          .then(({ data, meta }) => {
-            this.pageNum = pageNum;
-            this.totalPages = meta.totalPages;
-
-            let pp;
-            let list;
-            switch (this.type) {
-              case 'citations':
-                if (data.length > 0) {
-                  pp = this.unique(this.grabDois(data));
-                  list = this.listDois(pp);
-                  this.getMetadata(list, pp);
-                } else {
-                  this.items = this.grabDois(data);
-                }
-                // eslint-disable-next-line no-case-declarations
-                // const uniqueCitations = typeof meta.uniqueCitations !== 'undefined'
-                //   ? meta.uniqueCitations[0].citations
-                //   : 0;
-                this.$emit('citationsLoaded', data.length);
-                break;
-              case 'references':
-                if (data.length > 0) {
-                  pp = (this.grabDois(data));
-                  list = this.listDois(pp);
-                  this.getMetadata(list, pp);
-                } else {
-                  this.items = this.grabDois(data);
-                }
-                this.$emit('referencesLoaded', meta.total);
-                break;
-              case 'relations':
-                if (data.length > 0) {
-                  pp = (this.grabDois(data));
-                  list = this.listDois(pp);
-                  this.getMetadata(list, pp);
-                } else {
-                  this.items = this.grabDois(data);
-                }
-                this.$emit('relationsLoaded', meta.total);
-                break;
-              default:
-                break;
-            }
-          })
-          .catch((e) => {
-            // eslint-disable-next-line
-              console.log(e);
-          });
-      } catch (e) {
-        // eslint-disable-next-line
-          console.log(e);
+    startList() {
+      let pp;
+      let list;
+      switch (this.type) {
+        case 'citations':
+          if (this.dataInput.citations.length > 0) {
+            pp = (this.grabDois(this.dataInput));
+            list = this.listDois(pp);
+            this.getMetadata(list, pp);
+          } else {
+            this.items = this.grabDois(this.dataInput.citations);
+          }
+          this.$emit('citationsLoaded', this.dataInput.citations.length);
+          break;
+        case 'references':
+          if (this.dataInput.references.length > 0) {
+            pp = (this.grabDois(this.dataInput.references));
+            list = this.listDois(pp);
+            this.getMetadata(list, pp);
+          } else {
+            this.items = this.grabDois(this.dataInput.references);
+          }
+          // eslint-disable-next-line
+          this.$emit('referencesLoaded', this.dataInput.references.length);
+          break;
+        case 'relations':
+          // if (this.dataInput.length > 0) {
+          //   pp = (this.grabDois(this.dataInput));
+          //   list = this.listDois(pp);
+          //   this.getMetadata(list, pp);
+          // } else {
+          //   this.items = this.grabDois(this.dataInput);
+          // }
+          this.$emit('relationsLoaded', 0);
+          break;
+        default:
+          break;
       }
     },
     get_all() {
       try {
         this.pageNum = this.page;
-        if (this.type === 'citations' && this.count > 0) {
-          this.get(1);
-        }
+        // if (this.type === 'citations' && this.count > 0) {
+        //   this.startList(1);
+        // }
         if (this.type !== 'citations') {
-          this.get(1);
+          // eslint-disable-next-line
+          console.log(this.type);
+          this.startList();
         }
       } catch (e) {
         // eslint-disable-next-line
