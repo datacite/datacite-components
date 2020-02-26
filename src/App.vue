@@ -24,7 +24,9 @@
     <!-- ma relations  -->
     <LinksTabs doi="10.5438/0000-00ss" client="DRYAD" :counts=20 />
     <!-- ma relations  -->
-    <LinksTabs doi="10.13127/csi.1.1" client="Istituto Nazionale di Geofisica e Vulcanologia (INGV)" :counts=0 />
+    <LinksTabs doi="10.13127/csi.1.1" client="Istituto Nazionale di Geofisica e Vulcanologia (INGV)"
+               :data-input="input"
+    />
   </div>
 </template>
 
@@ -35,6 +37,29 @@ export default {
   name: 'App',
   components: {
     LinksTabs,
+  },
+  data() {
+    return {
+      input: {
+        references:
+          [
+            {
+              'subj-id': 'https://doi.org/10.1371/journal.ppat.1008107',
+              'obj-id': 'https://doi.org/10.7272/q6g15xs4',
+              'source-id': 'crossref-related',
+              'source-doi': '10.1371/journal.ppat.1008107',
+              'target-doi': '10.7272/q6g15xs4',
+              'relation-type-id': 'cites',
+              'source-relation-type-id': 'references',
+              'target-relation-type-id': 'citations',
+              total: 1,
+              'message-action': 'create',
+              'source-token': '4d47afa8-7e08-4bd9-b04a-29b691427330',
+              license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+            },
+          ],
+      },
+    };
   },
 };
 </script>
