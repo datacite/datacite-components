@@ -189,11 +189,10 @@ export default {
       const startItem = (pageNum - 1) * PAGESIZE;
       switch (this.type) {
         case 'citations':
+          if (typeof this.dataInput.citations === 'undefined') { break; }
           // eslint-disable-next-line no-case-declarations
           const citations = this.dataInput.citations.slice(startItem, startItem + PAGESIZE);
           if (citations.length > 0) {
-            // eslint-disable-next-line no-console
-            console.log('kakakaka');
             pp = (this.grabDois(citations));
             list = this.listDois(pp);
             this.getMetadata(list, pp);
@@ -203,6 +202,7 @@ export default {
           this.$emit('citationsLoaded', this.dataInput.citations.length);
           break;
         case 'references':
+          if (typeof this.dataInput.references === 'undefined') { break; }
           // eslint-disable-next-line no-case-declarations
           const references = this.dataInput.references.slice(startItem, startItem + PAGESIZE);
           if (references.length > 0) {
@@ -216,6 +216,7 @@ export default {
           this.$emit('referencesLoaded', this.dataInput.references.length);
           break;
         case 'relations':
+          if (typeof this.dataInput.relations === 'undefined') { break; }
           // eslint-disable-next-line no-case-declarations
           const relations = this.dataInput.relations.slice(startItem, startItem + PAGESIZE);
           if (relations.length > 0) {
