@@ -74,8 +74,8 @@ export default {
     },
     // eslint-disable-next-line vue/require-default-prop
     dataInput: {
-      type: Array,
-      required: false,
+      type: Object,
+      required: true,
     },
   },
   data() {
@@ -108,26 +108,17 @@ export default {
         switch (this.type) {
           case 'citations':
             return {
-              // doi: element.sourceDoi,
-              // instigator: this.isSelf(element.subjId),
-              // source: this.clientName,
-              // relation: element.relationTypeId,
-              doi: element['target-doi'],
-              instigator: this.isSelf(element['subj-id']),
+              doi: element.attributes.sourceDoi,
+              instigator: this.isSelf(element.attributes.subjId),
               source: this.clientName,
-              relation: element['relation-type-id'],
+              relation: element.attributes.relationTypeId,
             };
           case 'references':
-            // console.log(element);
             return {
-              // doi: element.targetDoi,
-              // instigator: this.isSelf(element.subjId),
-              // source: element.sourceId,
-              // relation: element.relationTypeId,
-              doi: element['target-doi'],
-              instigator: this.isSelf(element['subj-id']),
-              source: element['source-id'],
-              relation: element['relation-type-id'],
+              doi: element.attributes.targetDoi,
+              instigator: this.isSelf(element.attributes.subjId),
+              source: element.attributes.sourceId,
+              relation: element.attributes.relationTypeId,
             };
           default:
             break;
@@ -176,8 +167,6 @@ export default {
             // eslint-disable-next-line no-nested-ternary
             data.sort((a, b) => ((a.doi > b.doi) ? 1 : ((b.doi > a.doi) ? -1 : 0)));
             if (data.length !== metadatas.length) {
-              // eslint-disable-next-line
-              console.log(this.mergeArrayObjects(data, metadatas));
               this.items = this.mergeArrayObjects(data, metadatas);
             } else {
               this.items = metadatas.map((item, i) => ({ ...item, ...data[i] }));
@@ -194,40 +183,50 @@ export default {
         // eslint-disable-next-line no-return-assign
         .finally(() => (this.loading = false));
     },
-    startList() {
+    startList(pageNum) {
       let pp;
       let list;
+      const startItem = (pageNum - 1) * PAGESIZE;
       switch (this.type) {
         case 'citations':
-          if (this.dataInput.citations.length > 0) {
-            pp = (this.grabDois(this.dataInput));
+          // eslint-disable-next-line no-case-declarations
+          const citations = this.dataInput.citations.slice(startItem, startItem + PAGESIZE);
+          if (citations.length > 0) {
+            // eslint-disable-next-line no-console
+            console.log('kakakaka');
+            pp = (this.grabDois(citations));
             list = this.listDois(pp);
             this.getMetadata(list, pp);
           } else {
-            this.items = this.grabDois(this.dataInput.citations);
+            this.items = this.grabDois(citations);
           }
           this.$emit('citationsLoaded', this.dataInput.citations.length);
           break;
         case 'references':
-          if (this.dataInput.references.length > 0) {
-            pp = (this.grabDois(this.dataInput.references));
+          // eslint-disable-next-line no-case-declarations
+          const references = this.dataInput.references.slice(startItem, startItem + PAGESIZE);
+          if (references.length > 0) {
+            pp = (this.grabDois(references));
             list = this.listDois(pp);
             this.getMetadata(list, pp);
           } else {
-            this.items = this.grabDois(this.dataInput.references);
+            this.items = this.grabDois(references);
           }
           // eslint-disable-next-line
           this.$emit('referencesLoaded', this.dataInput.references.length);
           break;
         case 'relations':
-          // if (this.dataInput.length > 0) {
-          //   pp = (this.grabDois(this.dataInput));
-          //   list = this.listDois(pp);
-          //   this.getMetadata(list, pp);
-          // } else {
-          //   this.items = this.grabDois(this.dataInput);
-          // }
-          this.$emit('relationsLoaded', 0);
+          // eslint-disable-next-line no-case-declarations
+          const relations = this.dataInput.relations.slice(startItem, startItem + PAGESIZE);
+          if (relations.length > 0) {
+            pp = (this.grabDois(relations));
+            list = this.listDois(pp);
+            this.getMetadata(list, pp);
+          } else {
+            this.items = this.grabDois(relations);
+          }
+          // eslint-disable-next-line
+          this.$emit('referencesLoaded', this.dataInput.relations.length);
           break;
         default:
           break;
@@ -236,14 +235,7 @@ export default {
     get_all() {
       try {
         this.pageNum = this.page;
-        // if (this.type === 'citations' && this.count > 0) {
-        //   this.startList(1);
-        // }
-        if (this.type !== 'citations') {
-          // eslint-disable-next-line
-          console.log(this.type);
-          this.startList();
-        }
+        this.startList(1);
       } catch (e) {
         // eslint-disable-next-line
           console.log(e);
