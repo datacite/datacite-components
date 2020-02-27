@@ -23,7 +23,7 @@
           :page="page"
           :client-name="clientName"
           :type="type"
-          :data-input="dataInput"
+          :data-input="dataObject"
           @relationsLoaded="passCounter"
           @referencesLoaded="passCounter"
           @citationsLoaded="passCounter"
@@ -50,7 +50,7 @@ export default {
   props: {
     // eslint-disable-next-line vue/require-default-prop
     dataInput: {
-      type: Array,
+      type: String,
     },
     doi: {
       type: String,
@@ -72,6 +72,14 @@ export default {
     // eslint-disable-next-line vue/require-default-prop
     count: {
       type: Number,
+    },
+  },
+  computed: {
+    dataObject() {
+      if (typeof this.dataInput !== 'undefined') {
+        return JSON.parse(this.dataInput);
+      }
+      return null;
     },
   },
   methods: {

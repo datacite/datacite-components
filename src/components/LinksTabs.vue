@@ -3,7 +3,7 @@
     <div v-if="citationsNum + referencesNum + relationsNum > 0">
       <b-tabs>
         <b-tab
-          v-if="counts > 0"
+          v-if="citationsNum > 0 || counts > 0"
           id="citations-tab"
           :title="citationsTotalLabel"
         >
@@ -84,7 +84,7 @@ export default {
     },
     // eslint-disable-next-line vue/require-default-prop
     dataInput: {
-      type: Object,
+      type: String,
       required: false,
     },
   },
@@ -113,14 +113,6 @@ export default {
     setCitationsCounts() {
       // eslint-disable-next-line radix
       return parseInt(this.counts);
-    },
-    dataObject() {
-      if (typeof this.dataInput !== 'undefined') {
-        this.loadreferencesTotal(this.dataInput.references.length);
-        return this.dataInput;
-        // JSON.parse(this.dataInput);
-      }
-      return null;
     },
   },
   methods: {
