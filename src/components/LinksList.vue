@@ -274,10 +274,6 @@ export default {
                 } else {
                   this.items = this.grabDois(data);
                 }
-                // eslint-disable-next-line no-case-declarations
-                // const uniqueCitations = typeof meta.uniqueCitations !== 'undefined'
-                //   ? meta.uniqueCitations[0].citations
-                //   : 0;
                 this.$emit('citationsLoaded', data.length);
                 break;
               case 'references':

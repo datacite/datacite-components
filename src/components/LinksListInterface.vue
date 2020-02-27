@@ -76,10 +76,7 @@ export default {
   },
   computed: {
     dataObject() {
-      if (typeof this.dataInput !== 'undefined') {
-        return JSON.parse(this.dataInput);
-      }
-      return null;
+      return JSON.parse(this.dataInput);
     },
   },
   methods: {
