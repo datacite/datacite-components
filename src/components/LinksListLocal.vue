@@ -15,7 +15,7 @@
       >
         <paginate
           :page-count="totalPages"
-          :click-handler="get"
+          :click-handler="startList"
           :prev-text="'Previous'"
           :next-text="'Next'"
           :prev-class="'prev'"
@@ -183,6 +183,10 @@ export default {
         // eslint-disable-next-line no-return-assign
         .finally(() => (this.loading = false));
     },
+    setPagination(pageNum, totalPages) {
+      this.pageNum = pageNum;
+      this.totalPages = Math.floor(totalPages);
+    },
     startList(pageNum) {
       let pp;
       let list;
@@ -199,6 +203,7 @@ export default {
           } else {
             this.items = this.grabDois(citations);
           }
+          this.setPagination(pageNum, this.dataInput.citations.length / PAGESIZE);
           this.$emit('citationsLoaded', this.dataInput.citations.length);
           break;
         case 'references':
@@ -212,6 +217,7 @@ export default {
           } else {
             this.items = this.grabDois(references);
           }
+          this.setPagination(pageNum, this.dataInput.references.length / PAGESIZE);
           // eslint-disable-next-line
           this.$emit('referencesLoaded', this.dataInput.references.length);
           break;
