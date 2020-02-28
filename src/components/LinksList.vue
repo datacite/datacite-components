@@ -274,7 +274,7 @@ export default {
                 } else {
                   this.items = this.grabDois(data);
                 }
-                this.$emit('citationsLoaded', data.length);
+                this.$emit('citationsLoaded', meta.total);
                 break;
               case 'references':
                 if (data.length > 0) {
@@ -312,12 +312,7 @@ export default {
     get_all() {
       try {
         this.pageNum = this.page;
-        if (this.type === 'citations' && this.count > 0) {
-          this.get(1);
-        }
-        if (this.type !== 'citations') {
-          this.get(1);
-        }
+        this.get(1);
       } catch (e) {
         // eslint-disable-next-line
           console.log(e);
