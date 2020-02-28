@@ -27,6 +27,9 @@
     <LinksTabs doi="10.13127/csi.1.1" client="Istituto Nazionale di Geofisica e Vulcanologia (INGV)"
                data-input='{"citations":[{"id":"69738ec2-7abb-47e1-9587-bfe6b07218d2","type":"events","attributes":{"subjId":"https://doi.org/10.14454/xj8v-bj37","objId":"https://doi.org/10.5438/0012","sourceId":"datacite-related","sourceDoi":"10.14454/xj8v-bj37","targetDoi":"10.5438/0012","relationTypeId":"references","sourceRelationTypeId":"references","targetRelationTypeId":"citations","total":1,"messageAction":"create","sourceToken":"29a9a478-518f-4cbd-a133-a0dcef63d547","license":"https://creativecommons.org/publicdomain/zero/1.0/","occurredAt":"2019-11-29T21:31:46.000Z","timestamp":"2020-02-05T08:17:01.094Z"},"relationships":{"doiForSource":{"data":{"id":"10.14454/xj8v-bj37","type":"doi"}},"doiForTarget":{"data":{"id":"10.5438/0012","type":"doi"}}}}],"references":[]}'
     />
+
+    <LinksTabs doi="10.5438/0000-00ss" client="DRYAD" data-input='{"citations":[],"references":[]}'/>
+
   </div>
 </template>
 
