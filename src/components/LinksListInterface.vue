@@ -11,7 +11,6 @@
           :page="page"
           :client-name="clientName"
           :type="type"
-          :count="count"
           @relationsLoaded="passCounter"
           @referencesLoaded="passCounter"
           @citationsLoaded="passCounter"
