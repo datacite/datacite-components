@@ -140,7 +140,7 @@ export default {
         data: {
           query: `
               {
-                creativeWorks(ids: "${list}") {
+                works(ids: "${list}") {
                   work: nodes {
                     doi: id
                     client {
@@ -158,7 +158,7 @@ export default {
         .then((response) => {
           let metadatas = response.data.data == null
             ? null
-            : response.data.data.creativeWorks.work;
+            : response.data.data.works.work;
 
           if (metadatas != null) {
             metadatas = metadatas.map((item) => ({ ...item, doi: this.doiFromUrl(item.doi) }));

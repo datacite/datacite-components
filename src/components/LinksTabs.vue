@@ -138,7 +138,7 @@ export default {
         data: {
           query: `
               {
-                creativeWork(id: "${this.doi}") {
+                works(id: "${this.doi}") {
                   client {
                     name
                   }
@@ -152,7 +152,7 @@ export default {
             // console.log(response.data.data)
           this.clientName = response.data.data == null
             ? 'DataCite Search'
-            : response.data.data.creativeWork.client.name;
+            : response.data.data.works.client.name;
         })
         .catch((error) => {
           // eslint-disable-next-line
